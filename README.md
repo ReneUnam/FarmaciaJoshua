@@ -16,7 +16,7 @@ El proyecto sigue una arquitectura limpia que incluye las siguientes capas:
 - **WebApi.Api**: Contiene los controladores y configuración de la Web API.
 - **WebApi.Interface**: Contiene las interfaces que definen la lógica de negocio.
 - **WebApi.Implementation**: Implementación de las interfaces de servicios de la capa de aplicación.
-- **WebApi.Data**: Implementación del acceso a datos y mapeo de entidades.
+- **WebApi.Model**: Implementación del acceso a datos y mapeo de entidades.
 
 ## Prerrequisitos
 
