@@ -1,0 +1,20 @@
+[
+  {
+    "Id": 1,
+    "Name": "Nombre 1",
+    "DNI": "DNI 1",
+    "State": true
+  },
+  {
+    "Id": 2,
+    "Name": "Nombre 2",
+    "DNI": "DNI 2",
+    "State": true
+  },
+  {
+    "Id": 3,
+    "Name": "Masetro 3",
+    "DNI": "DNI 3",
+    "State": true
+  }
+]
