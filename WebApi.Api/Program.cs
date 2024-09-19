@@ -3,9 +3,12 @@ using WebApi.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IEstudianteService, EstudianteService>();
 builder.Services.AddScoped<IMaestroService, MaestroService>();
+builder.Services.AddScoped<IMateriaService, MateriaService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
