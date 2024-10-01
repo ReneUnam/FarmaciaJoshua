@@ -1,6 +1,9 @@
 ﻿namespace WebApi.Model;
 
-public class EstudianteEntities
+public class RolesEntities
 {
-   //TODO
+    public int IdRol { get; set; }
+    public string Nombre { get; set; }
+    public string Descripcion { get; set; }
+
 }

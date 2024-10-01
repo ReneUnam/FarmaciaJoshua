@@ -4,5 +4,10 @@ namespace WebApi.Interface;
 
 public interface IRolService
 {
-    //TODO
+    public RolesEntities Add(RolesEntities roles);
+    public IEnumerable<RolesEntities> GetAll();
+    public RolesEntities GetById(int id);
+    public void Update(RolesEntities roles);
+    public void Delete(int id);
+
 }
