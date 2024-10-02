@@ -2,10 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using WebApi.Interface;
 using WebApi.Model;
-using System.Windows.Input;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebApi.Implementation;
 
