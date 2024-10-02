@@ -1,6 +1,6 @@
 USE [FarmaciaJoshua]
 GO
-/****** Object:  Table [dbo].[Cat_DetalleProducto]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Cat_DetalleProducto]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16,7 +16,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Cat_Producto]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Cat_Producto]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -32,7 +32,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Categorias]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Categorias]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -47,7 +47,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Clientes]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Clientes]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -62,7 +62,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Compras]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Compras]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -79,7 +79,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[DetalleCompra]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[DetalleCompra]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -97,7 +97,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[DetalleVenta]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[DetalleVenta]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -115,7 +115,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Proveedores]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Proveedores]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -130,7 +130,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Roles]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Roles]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -145,7 +145,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Tbl_ProductoAlmacenado]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Tbl_ProductoAlmacenado]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -165,7 +165,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Usuarios]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Usuarios]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -183,7 +183,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Ventas]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  Table [dbo].[Ventas]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -280,7 +280,31 @@ GO
 ALTER TABLE [dbo].[Ventas]  WITH CHECK ADD FOREIGN KEY([IdUsuario])
 REFERENCES [dbo].[Usuarios] ([IdUsuario])
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_AgregarUsuario]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_AgregarCategoria]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[Sp_AgregarCategoria]
+@nombre as nvarchar(100),
+@descripcion as nvarchar(255)
+as
+insert into Categorias (Nombre,Descripcion) values (@nombre,@descripcion)
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_AgregarRoles]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create Procedure [dbo].[Sp_AgregarRoles]
+
+@nombre as nvarchar(50),
+@descripcion as nvarchar(50)
+AS
+insert into Roles(Nombre, Descripcion) values(@nombre, 
+@descripcion)
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_AgregarUsuario]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -295,7 +319,7 @@ as
 insert into Usuarios(nombres, apellidos, nombreusuario, contraseña, idRol) values(@nombres, 
 @apellidos, @nombreDeUsuario, @pwd, @idRol)
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_Editar]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_Editar]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -316,7 +340,38 @@ update Usuarios set
 	IdRol = ISNULL(@idrol,IdRol)
 	where IdUsuario = @id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_Eliminar]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_EditarCategoria]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create procedure [dbo].[Sp_EditarCategoria]
+@id as int,
+@nombre as nvarchar(100) = null,
+@descripcion as nvarchar(255) = null
+as
+update Categorias set
+Nombre = ISNULL(@nombre, Nombre),
+Descripcion = ISNULL(@descripcion, Descripcion)
+where IdCategoria =@id
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_EditarRol]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create Procedure [dbo].[Sp_EditarRol] 
+
+@id as int,
+@nombre as nvarchar(50) = null,
+@descripcion as nvarchar(50) = null as
+
+update Roles set
+	Nombre = isnull(@nombre,Nombre),
+	Descripcion = isnull(@descripcion,Descripcion)
+	where IdRol = @id
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_Eliminar]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -325,7 +380,25 @@ create procedure [dbo].[Sp_Eliminar]
 @id as int as
 delete from usuarios where idusuario = @id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_Mostrar]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_EliminarRol]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create procedure [dbo].[Sp_EliminarRol]
+@id as int as
+delete from Roles where IdRol = @id
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_ElimnarCategoria]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[Sp_ElimnarCategoria]
+@id as int as
+delete from Categorias where IdCategoria = @id
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_Mostrar]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -335,7 +408,26 @@ create proc [dbo].[Sp_Mostrar]
 as 
 select * from Usuarios
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorId]    Script Date: 28/9/2024 18:39:51 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarCategoria]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create proc [dbo].[Sp_MostrarCategoria]
+as
+select * from Categorias
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarCategoriaPorId]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[Sp_MostrarCategoriaPorId]
+@Id as int
+as
+select * from Categorias where IdCategoria = @Id
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorId]    Script Date: 2/10/2024 12:33:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -344,4 +436,23 @@ create procedure [dbo].[Sp_MostrarPorId]
 @id as int
 as 
 select * from usuarios where IdUsuario = @id
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorIdRol]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create procedure [dbo].[Sp_MostrarPorIdRol]
+@id as int
+as 
+select * from Roles where IdRol = @id
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarRoles]    Script Date: 2/10/2024 12:33:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create procedure [dbo].[Sp_MostrarRoles]
+as 
+select * from Roles
 GO
