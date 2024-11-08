@@ -1,38 +1,72 @@
-USE [FarmaciaJoshua]
+Create Database FarmaciaJoshua
+user FarmaciaJoshua
 GO
-/****** Object:  Table [dbo].[Cat_DetalleProducto]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  User [Gerente]    Script Date: 29/10/2024 17:31:45 ******/
+CREATE USER [Gerente] FOR LOGIN [Gerente] WITH DEFAULT_SCHEMA=[dbo]
+GO
+/****** Object:  User [Vendedor]    Script Date: 29/10/2024 17:31:45 ******/
+CREATE USER [Vendedor] FOR LOGIN [Vendedor] WITH DEFAULT_SCHEMA=[dbo]
+GO
+/****** Object:  Schema [Compras]    Script Date: 29/10/2024 17:31:45 ******/
+CREATE SCHEMA [Compras]
+GO
+/****** Object:  Schema [Productos]    Script Date: 29/10/2024 17:31:45 ******/
+CREATE SCHEMA [Productos]
+GO
+/****** Object:  Schema [Ventas]    Script Date: 29/10/2024 17:31:45 ******/
+CREATE SCHEMA [Ventas]
+GO
+/****** Object:  Table [Compras].[Compras]    Script Date: 29/10/2024 17:31:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Cat_DetalleProducto](
-	[Detalle_Id] [int] IDENTITY(1,1) NOT NULL,
-	[Detalle_Descripcion] [varchar](40) NOT NULL,
-	[Detalle_IdProducto] [int] NULL,
-	[Detalle_Estado] [bit] NULL,
+CREATE TABLE [Compras].[Compras](
+	[IdCompra] [int] IDENTITY(1,1) NOT NULL,
+	[IdProveedor] [int] NOT NULL,
+	[IdUsuario] [int] NOT NULL,
+	[FechaCompra] [datetime] NOT NULL,
+	[Total] [decimal](10, 2) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[Detalle_Id] ASC
+	[IdCompra] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Cat_Producto]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  Table [Compras].[DetalleCompra]    Script Date: 29/10/2024 17:31:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Cat_Producto](
-	[IdProducto] [int] IDENTITY(1,1) NOT NULL,
+CREATE TABLE [Compras].[DetalleCompra](
+	[IdDetalleCompra] [int] IDENTITY(1,1) NOT NULL,
+	[IdCompra] [int] NOT NULL,
+	[IdProducto] [int] NOT NULL,
+	[Cantidad] [int] NOT NULL,
+	[PrecioUnitario] [decimal](10, 2) NOT NULL,
+	[SubTotal]  AS ([Cantidad]*[PrecioUnitario]),
+PRIMARY KEY CLUSTERED 
+(
+	[IdDetalleCompra] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Compras].[Proveedores]    Script Date: 29/10/2024 17:31:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Compras].[Proveedores](
+	[IdProveedor] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [nvarchar](100) NOT NULL,
-	[IdCategoria] [int] NOT NULL,
-	[Estado] [varchar](50) NULL,
+	[Telefono] [nvarchar](15) NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[IdProducto] ASC
+	[IdProveedor] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Categorias]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  Table [dbo].[Categorias]    Script Date: 29/10/2024 17:31:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -47,90 +81,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Clientes]    Script Date: 2/10/2024 12:33:50 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Clientes](
-	[IdCliente] [int] IDENTITY(1,1) NOT NULL,
-	[Nombre] [nvarchar](100) NOT NULL,
-	[Apellido] [nvarchar](100) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdCliente] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Compras]    Script Date: 2/10/2024 12:33:50 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Compras](
-	[IdCompra] [int] IDENTITY(1,1) NOT NULL,
-	[IdProveedor] [int] NOT NULL,
-	[IdUsuario] [int] NOT NULL,
-	[FechaCompra] [datetime] NOT NULL,
-	[Total] [decimal](10, 2) NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdCompra] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[DetalleCompra]    Script Date: 2/10/2024 12:33:50 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[DetalleCompra](
-	[IdDetalleCompra] [int] IDENTITY(1,1) NOT NULL,
-	[IdCompra] [int] NOT NULL,
-	[IdProducto] [int] NOT NULL,
-	[Cantidad] [int] NOT NULL,
-	[PrecioUnitario] [decimal](10, 2) NOT NULL,
-	[SubTotal]  AS ([Cantidad]*[PrecioUnitario]),
-PRIMARY KEY CLUSTERED 
-(
-	[IdDetalleCompra] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[DetalleVenta]    Script Date: 2/10/2024 12:33:50 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[DetalleVenta](
-	[IdDetalleVenta] [int] IDENTITY(1,1) NOT NULL,
-	[IdVenta] [int] NOT NULL,
-	[IdProducto] [int] NOT NULL,
-	[Cantidad] [int] NOT NULL,
-	[PrecioUnitario] [decimal](10, 2) NOT NULL,
-	[SubTotal]  AS ([Cantidad]*[PrecioUnitario]),
-PRIMARY KEY CLUSTERED 
-(
-	[IdDetalleVenta] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Proveedores]    Script Date: 2/10/2024 12:33:50 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Proveedores](
-	[IdProveedor] [int] IDENTITY(1,1) NOT NULL,
-	[Nombre] [nvarchar](100) NOT NULL,
-	[Telefono] [nvarchar](15) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdProveedor] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Roles]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  Table [dbo].[Roles]    Script Date: 29/10/2024 17:31:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -145,27 +96,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Tbl_ProductoAlmacenado]    Script Date: 2/10/2024 12:33:50 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Tbl_ProductoAlmacenado](
-	[Almc_Id] [int] IDENTITY(1,1) NOT NULL,
-	[Almc_Detalle_Id] [int] NULL,
-	[Almc_Proveedor_Id] [int] NULL,
-	[Almc_Lote] [varchar](10) NULL,
-	[Almc_Existencia] [int] NULL,
-	[Almc_PrecioCompra] [decimal](18, 0) NULL,
-	[Almc_PrecioVenta] [decimal](18, 0) NULL,
-	[Almc_Estado] [bit] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[Almc_Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Usuarios]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  Table [dbo].[Usuarios]    Script Date: 29/10/2024 17:31:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -183,12 +114,97 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Ventas]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  Table [Productos].[Cat_DetalleProducto]    Script Date: 29/10/2024 17:31:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Ventas](
+CREATE TABLE [Productos].[Cat_DetalleProducto](
+	[Detalle_Id] [int] IDENTITY(1,1) NOT NULL,
+	[Detalle_Descripcion] [varchar](40) NOT NULL,
+	[Detalle_IdProducto] [int] NULL,
+	[Detalle_Estado] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Detalle_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Productos].[Cat_Producto]    Script Date: 29/10/2024 17:31:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Productos].[Cat_Producto](
+	[IdProducto] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [nvarchar](100) NOT NULL,
+	[IdCategoria] [int] NOT NULL,
+	[Estado] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[IdProducto] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Productos].[Tbl_ProductoAlmacenado]    Script Date: 29/10/2024 17:31:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Productos].[Tbl_ProductoAlmacenado](
+	[Almc_Id] [int] IDENTITY(1,1) NOT NULL,
+	[Almc_Detalle_Id] [int] NULL,
+	[Almc_Proveedor_Id] [int] NULL,
+	[Almc_Lote] [varchar](10) NULL,
+	[Almc_Existencia] [int] NULL,
+	[Almc_PrecioCompra] [decimal](18, 0) NULL,
+	[Almc_PrecioVenta] [decimal](18, 0) NULL,
+	[Almc_Estado] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Almc_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Ventas].[Clientes]    Script Date: 29/10/2024 17:31:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Ventas].[Clientes](
+	[IdCliente] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [nvarchar](100) NOT NULL,
+	[Apellido] [nvarchar](100) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[IdCliente] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Ventas].[DetalleVenta]    Script Date: 29/10/2024 17:31:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Ventas].[DetalleVenta](
+	[IdDetalleVenta] [int] IDENTITY(1,1) NOT NULL,
+	[IdVenta] [int] NOT NULL,
+	[IdProducto] [int] NOT NULL,
+	[Cantidad] [int] NOT NULL,
+	[PrecioUnitario] [decimal](10, 2) NOT NULL,
+	[SubTotal]  AS ([Cantidad]*[PrecioUnitario]),
+PRIMARY KEY CLUSTERED 
+(
+	[IdDetalleVenta] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Ventas].[Ventas]    Script Date: 29/10/2024 17:31:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Ventas].[Ventas](
 	[IdVenta] [int] IDENTITY(1,1) NOT NULL,
 	[IdCliente] [int] NOT NULL,
 	[IdUsuario] [int] NOT NULL,
@@ -200,25 +216,18 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+SET IDENTITY_INSERT [Compras].[Proveedores] ON 
+
+INSERT [Compras].[Proveedores] ([IdProveedor], [Nombre], [Telefono]) VALUES (1, N'Laboratorio Farma', N'2225-8900')
+INSERT [Compras].[Proveedores] ([IdProveedor], [Nombre], [Telefono]) VALUES (2, N'Cosméticos Bellos', N'2524-5678')
+SET IDENTITY_INSERT [Compras].[Proveedores] OFF
+GO
 SET IDENTITY_INSERT [dbo].[Categorias] ON 
 
 INSERT [dbo].[Categorias] ([IdCategoria], [Nombre], [Descripcion]) VALUES (1, N'Medicamentos', N'Productos farmacéuticos para la salud')
 INSERT [dbo].[Categorias] ([IdCategoria], [Nombre], [Descripcion]) VALUES (2, N'Cosméticos', N'Productos de cuidado personal')
 INSERT [dbo].[Categorias] ([IdCategoria], [Nombre], [Descripcion]) VALUES (3, N'Suplementos', N'Vitaminas y minerales para el bienestar')
 SET IDENTITY_INSERT [dbo].[Categorias] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Clientes] ON 
-
-INSERT [dbo].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (1, N'Juan', N'Pérez')
-INSERT [dbo].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (2, N'Ana', N'López')
-INSERT [dbo].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (3, N'Carlos', N'Martínez')
-SET IDENTITY_INSERT [dbo].[Clientes] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Proveedores] ON 
-
-INSERT [dbo].[Proveedores] ([IdProveedor], [Nombre], [Telefono]) VALUES (1, N'Laboratorio Farma', N'2225-8900')
-INSERT [dbo].[Proveedores] ([IdProveedor], [Nombre], [Telefono]) VALUES (2, N'Cosméticos Bellos', N'2524-5678')
-SET IDENTITY_INSERT [dbo].[Proveedores] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Roles] ON 
 
@@ -233,54 +242,61 @@ INSERT [dbo].[Usuarios] ([IdUsuario], [Nombres], [Apellidos], [NombreUsuario], [
 INSERT [dbo].[Usuarios] ([IdUsuario], [Nombres], [Apellidos], [NombreUsuario], [Contraseña], [IdRol]) VALUES (5, N'Sammuel Isaac', N'Zeledon Molina', N'sammuel', N'1111', 1)
 SET IDENTITY_INSERT [dbo].[Usuarios] OFF
 GO
-ALTER TABLE [dbo].[Cat_DetalleProducto] ADD  DEFAULT ((1)) FOR [Detalle_Estado]
+SET IDENTITY_INSERT [Ventas].[Clientes] ON 
+
+INSERT [Ventas].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (1, N'Juan', N'Pérez')
+INSERT [Ventas].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (2, N'Ana', N'López')
+INSERT [Ventas].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (3, N'Carlos', N'Martínez')
+SET IDENTITY_INSERT [Ventas].[Clientes] OFF
 GO
-ALTER TABLE [dbo].[Tbl_ProductoAlmacenado] ADD  DEFAULT ((1)) FOR [Almc_Estado]
+ALTER TABLE [Productos].[Cat_DetalleProducto] ADD  DEFAULT ((1)) FOR [Detalle_Estado]
 GO
-ALTER TABLE [dbo].[Cat_DetalleProducto]  WITH CHECK ADD FOREIGN KEY([Detalle_IdProducto])
-REFERENCES [dbo].[Cat_Producto] ([IdProducto])
+ALTER TABLE [Productos].[Tbl_ProductoAlmacenado] ADD  DEFAULT ((1)) FOR [Almc_Estado]
 GO
-ALTER TABLE [dbo].[Cat_Producto]  WITH CHECK ADD FOREIGN KEY([IdCategoria])
-REFERENCES [dbo].[Categorias] ([IdCategoria])
+ALTER TABLE [Compras].[Compras]  WITH CHECK ADD FOREIGN KEY([IdProveedor])
+REFERENCES [Compras].[Proveedores] ([IdProveedor])
 GO
-ALTER TABLE [dbo].[Compras]  WITH CHECK ADD FOREIGN KEY([IdProveedor])
-REFERENCES [dbo].[Proveedores] ([IdProveedor])
-GO
-ALTER TABLE [dbo].[Compras]  WITH CHECK ADD FOREIGN KEY([IdUsuario])
+ALTER TABLE [Compras].[Compras]  WITH CHECK ADD FOREIGN KEY([IdUsuario])
 REFERENCES [dbo].[Usuarios] ([IdUsuario])
 GO
-ALTER TABLE [dbo].[DetalleCompra]  WITH CHECK ADD FOREIGN KEY([IdCompra])
-REFERENCES [dbo].[Compras] ([IdCompra])
+ALTER TABLE [Compras].[DetalleCompra]  WITH CHECK ADD FOREIGN KEY([IdCompra])
+REFERENCES [Compras].[Compras] ([IdCompra])
 GO
-ALTER TABLE [dbo].[DetalleCompra]  WITH CHECK ADD  CONSTRAINT [FK_DetalleCompra_Cat_DetalleProducto] FOREIGN KEY([IdProducto])
-REFERENCES [dbo].[Cat_DetalleProducto] ([Detalle_Id])
+ALTER TABLE [Compras].[DetalleCompra]  WITH CHECK ADD  CONSTRAINT [FK_DetalleCompra_Cat_DetalleProducto] FOREIGN KEY([IdProducto])
+REFERENCES [Productos].[Cat_DetalleProducto] ([Detalle_Id])
 GO
-ALTER TABLE [dbo].[DetalleCompra] CHECK CONSTRAINT [FK_DetalleCompra_Cat_DetalleProducto]
-GO
-ALTER TABLE [dbo].[DetalleVenta]  WITH CHECK ADD FOREIGN KEY([IdVenta])
-REFERENCES [dbo].[Ventas] ([IdVenta])
-GO
-ALTER TABLE [dbo].[DetalleVenta]  WITH CHECK ADD  CONSTRAINT [FK_DetalleVenta_Cat_DetalleProducto] FOREIGN KEY([IdProducto])
-REFERENCES [dbo].[Cat_DetalleProducto] ([Detalle_Id])
-GO
-ALTER TABLE [dbo].[DetalleVenta] CHECK CONSTRAINT [FK_DetalleVenta_Cat_DetalleProducto]
-GO
-ALTER TABLE [dbo].[Tbl_ProductoAlmacenado]  WITH CHECK ADD FOREIGN KEY([Almc_Detalle_Id])
-REFERENCES [dbo].[Cat_DetalleProducto] ([Detalle_Id])
-GO
-ALTER TABLE [dbo].[Tbl_ProductoAlmacenado]  WITH CHECK ADD FOREIGN KEY([Almc_Proveedor_Id])
-REFERENCES [dbo].[Proveedores] ([IdProveedor])
+ALTER TABLE [Compras].[DetalleCompra] CHECK CONSTRAINT [FK_DetalleCompra_Cat_DetalleProducto]
 GO
 ALTER TABLE [dbo].[Usuarios]  WITH CHECK ADD FOREIGN KEY([IdRol])
 REFERENCES [dbo].[Roles] ([IdRol])
 GO
-ALTER TABLE [dbo].[Ventas]  WITH CHECK ADD FOREIGN KEY([IdCliente])
-REFERENCES [dbo].[Clientes] ([IdCliente])
+ALTER TABLE [Productos].[Cat_DetalleProducto]  WITH CHECK ADD FOREIGN KEY([Detalle_IdProducto])
+REFERENCES [Productos].[Cat_Producto] ([IdProducto])
 GO
-ALTER TABLE [dbo].[Ventas]  WITH CHECK ADD FOREIGN KEY([IdUsuario])
+ALTER TABLE [Productos].[Cat_Producto]  WITH CHECK ADD FOREIGN KEY([IdCategoria])
+REFERENCES [dbo].[Categorias] ([IdCategoria])
+GO
+ALTER TABLE [Productos].[Tbl_ProductoAlmacenado]  WITH CHECK ADD FOREIGN KEY([Almc_Detalle_Id])
+REFERENCES [Productos].[Cat_DetalleProducto] ([Detalle_Id])
+GO
+ALTER TABLE [Productos].[Tbl_ProductoAlmacenado]  WITH CHECK ADD FOREIGN KEY([Almc_Proveedor_Id])
+REFERENCES [Compras].[Proveedores] ([IdProveedor])
+GO
+ALTER TABLE [Ventas].[DetalleVenta]  WITH CHECK ADD FOREIGN KEY([IdVenta])
+REFERENCES [Ventas].[Ventas] ([IdVenta])
+GO
+ALTER TABLE [Ventas].[DetalleVenta]  WITH CHECK ADD  CONSTRAINT [FK_DetalleVenta_Cat_DetalleProducto] FOREIGN KEY([IdProducto])
+REFERENCES [Productos].[Cat_DetalleProducto] ([Detalle_Id])
+GO
+ALTER TABLE [Ventas].[DetalleVenta] CHECK CONSTRAINT [FK_DetalleVenta_Cat_DetalleProducto]
+GO
+ALTER TABLE [Ventas].[Ventas]  WITH CHECK ADD FOREIGN KEY([IdCliente])
+REFERENCES [Ventas].[Clientes] ([IdCliente])
+GO
+ALTER TABLE [Ventas].[Ventas]  WITH CHECK ADD FOREIGN KEY([IdUsuario])
 REFERENCES [dbo].[Usuarios] ([IdUsuario])
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_AgregarCategoria]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_AgregarCategoria]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -291,7 +307,7 @@ create procedure [dbo].[Sp_AgregarCategoria]
 as
 insert into Categorias (Nombre,Descripcion) values (@nombre,@descripcion)
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_AgregarRoles]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_AgregarRoles]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -304,7 +320,7 @@ AS
 insert into Roles(Nombre, Descripcion) values(@nombre, 
 @descripcion)
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_AgregarUsuario]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_AgregarUsuario]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -319,7 +335,7 @@ as
 insert into Usuarios(nombres, apellidos, nombreusuario, contraseña, idRol) values(@nombres, 
 @apellidos, @nombreDeUsuario, @pwd, @idRol)
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_Editar]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_Editar]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -340,7 +356,7 @@ update Usuarios set
 	IdRol = ISNULL(@idrol,IdRol)
 	where IdUsuario = @id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_EditarCategoria]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_EditarCategoria]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -355,7 +371,7 @@ Nombre = ISNULL(@nombre, Nombre),
 Descripcion = ISNULL(@descripcion, Descripcion)
 where IdCategoria =@id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_EditarRol]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_EditarRol]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -369,9 +385,10 @@ Create Procedure [dbo].[Sp_EditarRol]
 update Roles set
 	Nombre = isnull(@nombre,Nombre),
 	Descripcion = isnull(@descripcion,Descripcion)
-	where IdRol = @id
+	where IdRol = @id
+
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_Eliminar]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_Eliminar]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -380,16 +397,18 @@ create procedure [dbo].[Sp_Eliminar]
 @id as int as
 delete from usuarios where idusuario = @id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_EliminarRol]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_EliminarRol]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 Create procedure [dbo].[Sp_EliminarRol]
 @id as int as
-delete from Roles where IdRol = @id
+delete from Roles where IdRol = @id
+
+
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_ElimnarCategoria]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_ElimnarCategoria]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -398,7 +417,7 @@ create procedure [dbo].[Sp_ElimnarCategoria]
 @id as int as
 delete from Categorias where IdCategoria = @id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_Mostrar]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_Mostrar]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -408,7 +427,7 @@ create proc [dbo].[Sp_Mostrar]
 as 
 select * from Usuarios
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarCategoria]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarCategoria]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -416,8 +435,9 @@ GO
 Create proc [dbo].[Sp_MostrarCategoria]
 as
 select * from Categorias
+
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarCategoriaPorId]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarCategoriaPorId]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -427,7 +447,7 @@ create procedure [dbo].[Sp_MostrarCategoriaPorId]
 as
 select * from Categorias where IdCategoria = @Id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorId]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorId]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -437,7 +457,7 @@ create procedure [dbo].[Sp_MostrarPorId]
 as 
 select * from usuarios where IdUsuario = @id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorIdRol]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorIdRol]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -445,14 +465,14 @@ GO
 Create procedure [dbo].[Sp_MostrarPorIdRol]
 @id as int
 as 
-select * from Roles where IdRol = @id
+select * from Roles where IdRol = @id
 GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarRoles]    Script Date: 2/10/2024 12:33:50 ******/
+/****** Object:  StoredProcedure [dbo].[Sp_MostrarRoles]    Script Date: 29/10/2024 17:31:46 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 Create procedure [dbo].[Sp_MostrarRoles]
 as 
-select * from Roles
+select * from Roles
 GO
