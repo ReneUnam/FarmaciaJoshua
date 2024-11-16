@@ -9,28 +9,30 @@ public class VentaService : IVentaService
     private readonly IConfiguration _configuration;
     private string connectionString;
 
-    public VentaService(IConfiguration configuration){
+    public VentaService(IConfiguration configuration)
+    {
         _configuration = configuration;
         connectionString = _configuration.GetConnectionString("connectionSQL");
     }
 
     public Venta Add(Venta venta)
     {
-       using (SqlConnection connection = new SqlConnection(connectionString))
+        using (SqlConnection connection = new SqlConnection(connectionString))
         {
             connection.Open();
 
             try
             {
-                using (SqlCommand command = new SqlCommand("sp_CrearFactura", connection))
+                using (SqlCommand command = new SqlCommand("sp_generarVenta", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.AddWithValue("@Idcliente", venta.IdVenta);
+                    command.Parameters.AddWithValue("@Idcliente", venta.IdCliente);
+                    command.Parameters.AddWithValue("@idusuario", venta.IdUsuario);
                     command.Parameters.AddWithValue("@fecha", venta.FechaVenta);
 
                     DataTable detalleTable = new DataTable();
-                    detalleTable.Columns.Add("Id", typeof(string));
+                    detalleTable.Columns.Add("Id", typeof(int));
                     detalleTable.Columns.Add("Cantidad", typeof(int));
                     detalleTable.Columns.Add("Precio", typeof(decimal));
 
@@ -41,7 +43,7 @@ public class VentaService : IVentaService
 
                     SqlParameter detalleParameter = new SqlParameter("@Detalles", SqlDbType.Structured)
                     {
-                        TypeName = "dbo.TDetalleFactura",
+                        TypeName = "dbo.TDetalleVenta",
                         Value = detalleTable
                     };
                     command.Parameters.Add(detalleParameter);
@@ -60,15 +62,58 @@ public class VentaService : IVentaService
 
     }
 
+    public IEnumerable<Venta> GetALL()
+    {
+        var ventas = new List<Venta>();
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            var cmd = new SqlCommand("Sp_MostrarVenta", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ventas.Add(new Venta
+                        {
+                            IdVenta = (int)reader["IdVenta"],
+                            IdCliente = (int)reader["IdCliente"],
+                            FechaVenta = (DateTime)reader["FechaVenta"],
+                            VentaDetalle = new List<DetalleVenta>()
+                        });
+                    }
+                }
+            }
+            using (var command = new SqlCommand("Sp_MostrarDetallesVenta", connection))
+            {
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var detalle = new DetalleVenta
+                    {
+                        IdDetalleVenta = (int)reader["IdDetalleVenta"],
+                        IdVenta = (int)reader["IdVenta"],
+                        IdProducto = (int)reader["IdProducto"],
+                        Cantidad = (int)reader["Cantidad"],
+                        PrecioUnitario = (decimal)reader["PrecioUnitario"],
+                    };
+
+                    var venta = ventas.FirstOrDefault(find => find.IdVenta == detalle.IdDetalleVenta);
+                    if (venta != null)
+                    {
+                        venta.VentaDetalle.Add(detalle);
+                    }
+                }
+            }
+        }
+        return ventas;
+    }
     public void Delete(int id)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<Venta> GetALL()
-    {
-        throw new NotImplementedException();
-    }
 
     public Venta GetByID(int id)
     {
