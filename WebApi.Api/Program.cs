@@ -9,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IRolService, RolService>();
+builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

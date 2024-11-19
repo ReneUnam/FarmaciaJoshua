@@ -23,35 +23,34 @@ public class VentaService : IVentaService
 
             try
             {
-                using (SqlCommand command = new SqlCommand("sp_generarVenta", connection))
+                var command = new SqlCommand("sp_generarVenta", connection);
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@Idcliente", venta.IdCliente);
+                command.Parameters.AddWithValue("@idusuario", venta.IdUsuario);
+                command.Parameters.AddWithValue("@fecha", venta.FechaVenta);
+
+                DataTable detalleTable = new DataTable();
+                detalleTable.Columns.Add("Id", typeof(int));
+                detalleTable.Columns.Add("Cantidad", typeof(int));
+                detalleTable.Columns.Add("Precio", typeof(decimal));
+
+                foreach (var detalle in venta.VentaDetalle)
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.AddWithValue("@Idcliente", venta.IdCliente);
-                    command.Parameters.AddWithValue("@idusuario", venta.IdUsuario);
-                    command.Parameters.AddWithValue("@fecha", venta.FechaVenta);
-
-                    DataTable detalleTable = new DataTable();
-                    detalleTable.Columns.Add("Id", typeof(int));
-                    detalleTable.Columns.Add("Cantidad", typeof(int));
-                    detalleTable.Columns.Add("Precio", typeof(decimal));
-
-                    foreach (var detalle in venta.VentaDetalle)
-                    {
-                        detalleTable.Rows.Add(detalle.IdProducto, detalle.Cantidad, detalle.PrecioUnitario);
-                    }
-
-                    SqlParameter detalleParameter = new SqlParameter("@Detalles", SqlDbType.Structured)
-                    {
-                        TypeName = "dbo.TDetalleVenta",
-                        Value = detalleTable
-                    };
-                    command.Parameters.Add(detalleParameter);
-
-                    command.ExecuteNonQuery();
-
-                    return venta;
+                    detalleTable.Rows.Add(detalle.IdProducto, detalle.Cantidad, detalle.PrecioUnitario);
                 }
+
+                SqlParameter detalleParameter = new SqlParameter("@Detalles", SqlDbType.Structured)
+                {
+                    TypeName = "dbo.TDetalleVenta",
+                    Value = detalleTable
+                };
+                command.Parameters.Add(detalleParameter);
+                
+                command.ExecuteNonQuery();
+
+                return venta;
             }
             catch (Exception ex)
             {
@@ -68,7 +67,7 @@ public class VentaService : IVentaService
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var cmd = new SqlCommand("Sp_MostrarVenta", connection);
+            var cmd = new SqlCommand("Sp_MostrarVentas", connection);
             cmd.CommandType = CommandType.StoredProcedure;
             {
                 using (var reader = cmd.ExecuteReader())
@@ -80,6 +79,7 @@ public class VentaService : IVentaService
                             IdVenta = (int)reader["IdVenta"],
                             IdCliente = (int)reader["IdCliente"],
                             FechaVenta = (DateTime)reader["FechaVenta"],
+                            Total = (decimal)reader["Total"],
                             VentaDetalle = new List<DetalleVenta>()
                         });
                     }
@@ -97,9 +97,11 @@ public class VentaService : IVentaService
                         IdProducto = (int)reader["IdProducto"],
                         Cantidad = (int)reader["Cantidad"],
                         PrecioUnitario = (decimal)reader["PrecioUnitario"],
+                        Subtotal = (decimal)reader["Subtotal"]
                     };
 
-                    var venta = ventas.FirstOrDefault(find => find.IdVenta == detalle.IdDetalleVenta);
+                    var venta = ventas.FirstOrDefault(find => find.IdVenta == detalle.IdVenta);
+
                     if (venta != null)
                     {
                         venta.VentaDetalle.Add(detalle);

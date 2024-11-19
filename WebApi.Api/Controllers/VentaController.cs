@@ -3,23 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.Interface;
 using WebApi.Model;
 
-namespace MyApp.Namespace
+namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class VentaController : ControllerBase
     {
-        private readonly IVentaService _VentaService;
+        private readonly IVentaService _IVentaService;
 
-        public VentaController(IVentaService facturaService)
+        public VentaController(IVentaService ventaService)
         {
-            _VentaService = facturaService;
+            _IVentaService = ventaService;
         }
 
         [HttpGet("{id}")]
         public ActionResult GetById(int id)
         {
-            var venta = _VentaService.GetByID(id);
+            var venta = _IVentaService.GetByID(id);
             if (venta == null) { return NotFound(); }
             return Ok(venta);
         }
@@ -27,7 +27,7 @@ namespace MyApp.Namespace
         [HttpGet]
         public ActionResult<IEnumerable<Venta>> GetAll()
         {
-            var ventas = _VentaService.GetALL();
+            var ventas = _IVentaService.GetALL();
             if (ventas == null) { return NotFound(); }
             return Ok(ventas);
         }
@@ -39,8 +39,8 @@ namespace MyApp.Namespace
             {
                 return BadRequest("Datos no encontrados");
             }
-            _VentaService.Add(venta);
-            return Ok(new { mensaje = "Agregado correctamente" });
+            _IVentaService.Add(venta);
+            return Ok();
         }
 
     }
