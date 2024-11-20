@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Interface;
 using WebApi.Model;
+using WebApi.Api.DTO;
 
 namespace WebApi.Controllers
 {
@@ -54,17 +55,25 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(UsuarioEntities usuario)
+        public async Task<IActionResult> add([FromBody] UsuarioDto usuario)
         {
+            var user = new UsuarioEntities
+            {
+                Nombres = usuario.Nombres,
+                Apellidos = usuario.Apellidos,
+                NombreUsuario = usuario.NombreUsuario,
+                IdRol = usuario.IdRol,
+
+            };
+
             try
             {
-                _IUsuarioService.Add(usuario);
-                return Ok(new { mensaje = "Agregado correctamente" });
-
+                await _IUsuarioService.add(user, usuario.Contraseña);
+                return Ok();
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
+                return BadRequest(new { message = ex.Message });
             }
         }
 

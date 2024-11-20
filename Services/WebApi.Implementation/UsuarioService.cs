@@ -1,5 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using WebApi.Interface;
 using WebApi.Model;
@@ -16,7 +18,8 @@ public class UsuarioService : IUsuarioService
         _configuration = configuration;
         connectionString = _configuration.GetConnectionString("connectionSQL");
     }
-    public UsuarioEntities Add(UsuarioEntities usuario)
+
+    /*public async Task<UsuarioEntities> Add(UsuarioEntities usuario)
     {
         using (var connection = new SqlConnection(connectionString))
         {
@@ -33,7 +36,7 @@ public class UsuarioService : IUsuarioService
             command.ExecuteNonQuery();
         }
         return usuario;
-    }
+    }*/
 
     public IEnumerable<UsuarioEntities> GetAll()
     {
@@ -123,6 +126,36 @@ public class UsuarioService : IUsuarioService
             connection.Open();
             command.ExecuteNonQuery();
         }
+    }
+
+    public async Task<UsuarioEntities> add(UsuarioEntities usuario, string Contraseña)
+    {
+        byte[] salt;
+        usuario.Contraseña = CreatePasswordHash(Contraseña, out salt);
+
+        using (var connection = new SqlConnection(connectionString))
+        {
+            var command = new SqlCommand("INSERT INTO Usuarios(Nombres, Apellidos, NombreUsuario, Contraseña, IdRol, UsuarioSalt) OUTPUT INSERTED.IdUsuario VALUES (@Nombres, @Apellidos, @NombreUsuario, @PasswordHash, @IdRol, @Salt)", connection);
+            command.Parameters.AddWithValue("@Nombres", usuario.Nombres);
+            command.Parameters.AddWithValue("@Apellidos", usuario.Apellidos);
+            command.Parameters.AddWithValue("@NombreUsuario", usuario.NombreUsuario);
+            command.Parameters.AddWithValue("@PasswordHash", usuario.Contraseña);
+            command.Parameters.AddWithValue("@Salt", salt);
+            command.Parameters.AddWithValue("@IdRol", usuario.IdRol);
+
+            await connection.OpenAsync();
+            usuario.IdUsuario = (int)await command.ExecuteScalarAsync();
+        }
+        return usuario;
+    }
+
+    private string CreatePasswordHash(string Contraseña, out byte[] salt)
+    {
+        using var hmac = new HMACSHA256();
+        salt = hmac.Key;
+        var combinedBytes = Encoding.UTF8.GetBytes(Contraseña).Concat(salt).ToArray();
+        var hash = hmac.ComputeHash(combinedBytes);
+        return Convert.ToBase64String(hash);
     }
 }
 
