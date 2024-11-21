@@ -1,478 +1,330 @@
 Create Database FarmaciaJoshua
-user FarmaciaJoshua
-GO
-/****** Object:  User [Gerente]    Script Date: 29/10/2024 17:31:45 ******/
-CREATE USER [Gerente] FOR LOGIN [Gerente] WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [Vendedor]    Script Date: 29/10/2024 17:31:45 ******/
-CREATE USER [Vendedor] FOR LOGIN [Vendedor] WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  Schema [Compras]    Script Date: 29/10/2024 17:31:45 ******/
-CREATE SCHEMA [Compras]
-GO
-/****** Object:  Schema [Productos]    Script Date: 29/10/2024 17:31:45 ******/
-CREATE SCHEMA [Productos]
-GO
-/****** Object:  Schema [Ventas]    Script Date: 29/10/2024 17:31:45 ******/
-CREATE SCHEMA [Ventas]
-GO
-/****** Object:  Table [Compras].[Compras]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Compras].[Compras](
-	[IdCompra] [int] IDENTITY(1,1) NOT NULL,
-	[IdProveedor] [int] NOT NULL,
-	[IdUsuario] [int] NOT NULL,
-	[FechaCompra] [datetime] NOT NULL,
-	[Total] [decimal](10, 2) NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdCompra] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [Compras].[DetalleCompra]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Compras].[DetalleCompra](
-	[IdDetalleCompra] [int] IDENTITY(1,1) NOT NULL,
-	[IdCompra] [int] NOT NULL,
-	[IdProducto] [int] NOT NULL,
-	[Cantidad] [int] NOT NULL,
-	[PrecioUnitario] [decimal](10, 2) NOT NULL,
-	[SubTotal]  AS ([Cantidad]*[PrecioUnitario]),
-PRIMARY KEY CLUSTERED 
-(
-	[IdDetalleCompra] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [Compras].[Proveedores]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Compras].[Proveedores](
-	[IdProveedor] [int] IDENTITY(1,1) NOT NULL,
-	[Nombre] [nvarchar](100) NOT NULL,
-	[Telefono] [nvarchar](15) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdProveedor] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Categorias]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Categorias](
-	[IdCategoria] [int] IDENTITY(1,1) NOT NULL,
-	[Nombre] [nvarchar](100) NOT NULL,
-	[Descripcion] [nvarchar](255) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdCategoria] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Roles]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Roles](
-	[IdRol] [int] IDENTITY(1,1) NOT NULL,
-	[Nombre] [nvarchar](50) NOT NULL,
-	[Descripcion] [nvarchar](255) NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdRol] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Usuarios]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Usuarios](
-	[IdUsuario] [int] IDENTITY(1,1) NOT NULL,
-	[Nombres] [nvarchar](50) NOT NULL,
-	[Apellidos] [nvarchar](50) NOT NULL,
-	[NombreUsuario] [nvarchar](50) NOT NULL,
-	[Contraseña] [nvarchar](50) NOT NULL,
-	[IdRol] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdUsuario] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [Productos].[Cat_DetalleProducto]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Productos].[Cat_DetalleProducto](
-	[Detalle_Id] [int] IDENTITY(1,1) NOT NULL,
-	[Detalle_Descripcion] [varchar](40) NOT NULL,
-	[Detalle_IdProducto] [int] NULL,
-	[Detalle_Estado] [bit] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[Detalle_Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [Productos].[Cat_Producto]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Productos].[Cat_Producto](
-	[IdProducto] [int] IDENTITY(1,1) NOT NULL,
-	[Nombre] [nvarchar](100) NOT NULL,
-	[IdCategoria] [int] NOT NULL,
-	[Estado] [varchar](50) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdProducto] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [Productos].[Tbl_ProductoAlmacenado]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Productos].[Tbl_ProductoAlmacenado](
-	[Almc_Id] [int] IDENTITY(1,1) NOT NULL,
-	[Almc_Detalle_Id] [int] NULL,
-	[Almc_Proveedor_Id] [int] NULL,
-	[Almc_Lote] [varchar](10) NULL,
-	[Almc_Existencia] [int] NULL,
-	[Almc_PrecioCompra] [decimal](18, 0) NULL,
-	[Almc_PrecioVenta] [decimal](18, 0) NULL,
-	[Almc_Estado] [bit] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[Almc_Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [Ventas].[Clientes]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Ventas].[Clientes](
-	[IdCliente] [int] IDENTITY(1,1) NOT NULL,
-	[Nombre] [nvarchar](100) NOT NULL,
-	[Apellido] [nvarchar](100) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdCliente] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [Ventas].[DetalleVenta]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Ventas].[DetalleVenta](
-	[IdDetalleVenta] [int] IDENTITY(1,1) NOT NULL,
-	[IdVenta] [int] NOT NULL,
-	[IdProducto] [int] NOT NULL,
-	[Cantidad] [int] NOT NULL,
-	[PrecioUnitario] [decimal](10, 2) NOT NULL,
-	[SubTotal]  AS ([Cantidad]*[PrecioUnitario]),
-PRIMARY KEY CLUSTERED 
-(
-	[IdDetalleVenta] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [Ventas].[Ventas]    Script Date: 29/10/2024 17:31:45 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [Ventas].[Ventas](
-	[IdVenta] [int] IDENTITY(1,1) NOT NULL,
-	[IdCliente] [int] NOT NULL,
-	[IdUsuario] [int] NOT NULL,
-	[FechaVenta] [datetime] NOT NULL,
-	[Total] [decimal](10, 2) NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[IdVenta] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-SET IDENTITY_INSERT [Compras].[Proveedores] ON 
 
-INSERT [Compras].[Proveedores] ([IdProveedor], [Nombre], [Telefono]) VALUES (1, N'Laboratorio Farma', N'2225-8900')
-INSERT [Compras].[Proveedores] ([IdProveedor], [Nombre], [Telefono]) VALUES (2, N'Cosméticos Bellos', N'2524-5678')
-SET IDENTITY_INSERT [Compras].[Proveedores] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Categorias] ON 
+Use FarmaciaJoshua
 
-INSERT [dbo].[Categorias] ([IdCategoria], [Nombre], [Descripcion]) VALUES (1, N'Medicamentos', N'Productos farmacéuticos para la salud')
-INSERT [dbo].[Categorias] ([IdCategoria], [Nombre], [Descripcion]) VALUES (2, N'Cosméticos', N'Productos de cuidado personal')
-INSERT [dbo].[Categorias] ([IdCategoria], [Nombre], [Descripcion]) VALUES (3, N'Suplementos', N'Vitaminas y minerales para el bienestar')
-SET IDENTITY_INSERT [dbo].[Categorias] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Roles] ON 
+Create schema Compras;
+Create schema Ventas;
+Create schema Productos;
 
-INSERT [dbo].[Roles] ([IdRol], [Nombre], [Descripcion]) VALUES (1, N'Administrador', N'Gestiona la farmacia')
-INSERT [dbo].[Roles] ([IdRol], [Nombre], [Descripcion]) VALUES (2, N'Vendedor', N'Atiende a los clientes y realiza ventas')
-SET IDENTITY_INSERT [dbo].[Roles] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Usuarios] ON 
+--DBO
+Create table dbo.Roles(
+	IdRol int primary key identity (1,1) not null,
+	Nombre varchar(50) not null, 
+	Descripcion varchar(250) not null
+)
+Create table dbo.Usuarios(
+	IdUsuario int primary key identity (1,1),
+	Nombres varchar(50) not null,
+	Apellidos varchar(50) not null,
+	NombreUsuario varchar(50) not null,
+	Contraseña nvarchar(50) not null,
+	IdRol int not null,
+	UsuarioSalt varbinary(64) null,
 
-INSERT [dbo].[Usuarios] ([IdUsuario], [Nombres], [Apellidos], [NombreUsuario], [Contraseña], [IdRol]) VALUES (1, N'Gary Julian', N'Navarro Matus', N'gary', N'4321', 1)
-INSERT [dbo].[Usuarios] ([IdUsuario], [Nombres], [Apellidos], [NombreUsuario], [Contraseña], [IdRol]) VALUES (2, N'Luis Carlos', N'Lopez Vado', N'Luis', N'1234', 2)
-INSERT [dbo].[Usuarios] ([IdUsuario], [Nombres], [Apellidos], [NombreUsuario], [Contraseña], [IdRol]) VALUES (5, N'Sammuel Isaac', N'Zeledon Molina', N'sammuel', N'1111', 1)
-SET IDENTITY_INSERT [dbo].[Usuarios] OFF
-GO
-SET IDENTITY_INSERT [Ventas].[Clientes] ON 
+	foreign key IdRol references dbo.Rol(IdRol)
+)
+Create table dbo.Categorias(
+	IdCategoria int primary key identity (1,1) not null,
+	Nombre varchar(50) not null, 
+	Descripcion varchar(250) null
+)
 
-INSERT [Ventas].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (1, N'Juan', N'Pérez')
-INSERT [Ventas].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (2, N'Ana', N'López')
-INSERT [Ventas].[Clientes] ([IdCliente], [Nombre], [Apellido]) VALUES (3, N'Carlos', N'Martínez')
-SET IDENTITY_INSERT [Ventas].[Clientes] OFF
-GO
-ALTER TABLE [Productos].[Cat_DetalleProducto] ADD  DEFAULT ((1)) FOR [Detalle_Estado]
-GO
-ALTER TABLE [Productos].[Tbl_ProductoAlmacenado] ADD  DEFAULT ((1)) FOR [Almc_Estado]
-GO
-ALTER TABLE [Compras].[Compras]  WITH CHECK ADD FOREIGN KEY([IdProveedor])
-REFERENCES [Compras].[Proveedores] ([IdProveedor])
-GO
-ALTER TABLE [Compras].[Compras]  WITH CHECK ADD FOREIGN KEY([IdUsuario])
-REFERENCES [dbo].[Usuarios] ([IdUsuario])
-GO
-ALTER TABLE [Compras].[DetalleCompra]  WITH CHECK ADD FOREIGN KEY([IdCompra])
-REFERENCES [Compras].[Compras] ([IdCompra])
-GO
-ALTER TABLE [Compras].[DetalleCompra]  WITH CHECK ADD  CONSTRAINT [FK_DetalleCompra_Cat_DetalleProducto] FOREIGN KEY([IdProducto])
-REFERENCES [Productos].[Cat_DetalleProducto] ([Detalle_Id])
-GO
-ALTER TABLE [Compras].[DetalleCompra] CHECK CONSTRAINT [FK_DetalleCompra_Cat_DetalleProducto]
-GO
-ALTER TABLE [dbo].[Usuarios]  WITH CHECK ADD FOREIGN KEY([IdRol])
-REFERENCES [dbo].[Roles] ([IdRol])
-GO
-ALTER TABLE [Productos].[Cat_DetalleProducto]  WITH CHECK ADD FOREIGN KEY([Detalle_IdProducto])
-REFERENCES [Productos].[Cat_Producto] ([IdProducto])
-GO
-ALTER TABLE [Productos].[Cat_Producto]  WITH CHECK ADD FOREIGN KEY([IdCategoria])
-REFERENCES [dbo].[Categorias] ([IdCategoria])
-GO
-ALTER TABLE [Productos].[Tbl_ProductoAlmacenado]  WITH CHECK ADD FOREIGN KEY([Almc_Detalle_Id])
-REFERENCES [Productos].[Cat_DetalleProducto] ([Detalle_Id])
-GO
-ALTER TABLE [Productos].[Tbl_ProductoAlmacenado]  WITH CHECK ADD FOREIGN KEY([Almc_Proveedor_Id])
-REFERENCES [Compras].[Proveedores] ([IdProveedor])
-GO
-ALTER TABLE [Ventas].[DetalleVenta]  WITH CHECK ADD FOREIGN KEY([IdVenta])
-REFERENCES [Ventas].[Ventas] ([IdVenta])
-GO
-ALTER TABLE [Ventas].[DetalleVenta]  WITH CHECK ADD  CONSTRAINT [FK_DetalleVenta_Cat_DetalleProducto] FOREIGN KEY([IdProducto])
-REFERENCES [Productos].[Cat_DetalleProducto] ([Detalle_Id])
-GO
-ALTER TABLE [Ventas].[DetalleVenta] CHECK CONSTRAINT [FK_DetalleVenta_Cat_DetalleProducto]
-GO
-ALTER TABLE [Ventas].[Ventas]  WITH CHECK ADD FOREIGN KEY([IdCliente])
-REFERENCES [Ventas].[Clientes] ([IdCliente])
-GO
-ALTER TABLE [Ventas].[Ventas]  WITH CHECK ADD FOREIGN KEY([IdUsuario])
-REFERENCES [dbo].[Usuarios] ([IdUsuario])
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_AgregarCategoria]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create procedure [dbo].[Sp_AgregarCategoria]
-@nombre as nvarchar(100),
-@descripcion as nvarchar(255)
-as
-insert into Categorias (Nombre,Descripcion) values (@nombre,@descripcion)
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_AgregarRoles]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-Create Procedure [dbo].[Sp_AgregarRoles]
+--PRODUCTOS
+Create table Productos.Cat_Producto(
+	IdProducto int primary key identity(1,1) not null,
+	Nombre varchar(50) not null,
+	IdCategoria int not null,
+	Estado varchar(50) null
 
-@nombre as nvarchar(50),
-@descripcion as nvarchar(50)
+	foreign key IdCategoria references dbo.Categoria(IdCategoria)
+)
+
+Create table Productos.Cat_DetalleProducto(
+	Detalle_Id int primary key identity (1,1) not null,
+	Detalle_Descripcion varchar(200) not null,
+	Detalle_IdProducto int,
+	Detalle_Estado bit null,
+
+	foreign key Detalle_IdProducto references Productos.Cat_Producto(IdProducto)
+)
+
+Create table Productos.Tbl_ProductoAlmacenado(
+	Almc_Id int primary key identity (1,1) not null,
+	Almc_Detalle_Id int not null,
+	Almc_Proveedor_Id int not null,
+	Almc_Lote varchar(10), null
+	Almc_Existencia int not null,
+	Almc_PrecioCompra decimal(18,0) not null,
+	Almc_PrecioVenta decimal(18,0) not null,
+	Almc_Estado bit null,
+
+	foreign key Almc_Detalle_Id references Productos.Cat_DetalleProducto(Detalle_Id),
+	foreign key Almc_Proveedor_Id references Compras.Proveedores(IdProveedor)
+)
+
+--COMPRAS
+Create table Compras.Proveedores(
+	IdProveedor int primary key identity(1,1) not null,
+	Nombre varchar(50) not null,
+	Descripcion varchar (250) null
+)
+
+Create table Compras.Compras(
+	IdCompra int primary key identity(1,1) not null,
+	IdProveedor int not null,
+	IdUsuario int not null,
+	FechaCompra datetime not null,
+	Total decimal(10,2) not null,
+
+	foreign key IdProveedor references Compras.Proveedores(IdProveedor),
+	foreign key IdUsuario references dbo.Usuario(IdUsuario)
+)
+
+Create table Compras.DetalleCompra(
+	IdDetalleCompra int primary key identity(1,1) not null,
+	IdCompra int not null,
+	IdProducto int not null,
+	Cantidad int not null,
+	PrecioUnitario decimal(10,2) not null,
+	Subtotal AS (Cantidad * PrecioUnitario) not null,
+
+	foreign key IdCompra references Compras.Compras(IdCompra),
+	foreign key IdProducto references Productos.Cat_Producto(IdProducto) 
+)
+
+--VENTAS
+Create table Ventas.Clientes(
+	IdCliente int primary key identity(1,1) not null,
+	Nombre varchar(100) not null, 
+	Apellido varchar(100) not null
+)
+Create table Ventas.Ventas(
+	IdVenta int primary key identity(1,1) not null,
+	IdCliente int not null,
+	IdUsuario int not null,
+	FechaVenta datetime not null,
+	Total decimal(10,2) not null
+)
+Create table Ventas.DetalleVenta(
+	IdDetalleVenta int primary key identity (1,1) not null,
+	IdVenta int not null,
+	IdProducto int not null, 
+	Cantidad int not null,
+	PrecioUnitario decimal(10,2) not null,
+	Subtotal AS (Cantidad * PrecioUnitario) not null,
+
+	foreign key IdVenta references Ventas.Ventas(IdVenta),
+	foreign key IdProducto references Productos.Cat_Producto(IdProducto)
+)
+
+--PROCEDIMIENTOS ALMACENADOS
+
+--USUARIO
+--GET ALL
+Create procedure dbo.Sp_MostrarUsuarios
 AS
-insert into Roles(Nombre, Descripcion) values(@nombre, 
-@descripcion)
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_AgregarUsuario]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE procedure [dbo].[Sp_AgregarUsuario]
-@nombres as nvarchar(50),
-@apellidos as nvarchar(50),
-@nombreDeUsuario as nvarchar(50),
-@pwd as nvarchar(50),
-@idRol int
-as
-insert into Usuarios(nombres, apellidos, nombreusuario, contraseña, idRol) values(@nombres, 
-@apellidos, @nombreDeUsuario, @pwd, @idRol)
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_Editar]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create proc [dbo].[Sp_Editar] 
-@id as int,
-@nombres as nvarchar(50) = null,
-@apellidos as nvarchar(50) = null,
-@nombreDeUsuario as nvarchar(50) = null,
-@pwd as nvarchar (50) = null,
-@idrol as nvarchar (50) =null as
+BEGIN
+	SELECT * 
+	FROM dbo.Usuarios
+END;
 
-update Usuarios set
-	Nombres = isnull(@nombres,Nombres),
-	Apellidos = isnull(@apellidos,Apellidos),
-	NombreUsuario = isnull(@nombreDeUsuario,NombreUsuario),
-	Contraseña = isnull(@pwd,Contraseña),
-	IdRol = ISNULL(@idrol,IdRol)
-	where IdUsuario = @id
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_EditarCategoria]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-Create procedure [dbo].[Sp_EditarCategoria]
-@id as int,
-@nombre as nvarchar(100) = null,
-@descripcion as nvarchar(255) = null
-as
-update Categorias set
-Nombre = ISNULL(@nombre, Nombre),
-Descripcion = ISNULL(@descripcion, Descripcion)
-where IdCategoria =@id
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_EditarRol]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-Create Procedure [dbo].[Sp_EditarRol] 
+--GET BY ID
+CREATE PROCEDURE dbo.Sp_MostrarUsuarioPorId
+@id AS INT
+AS 
+BEGIN
+	SELECT * 
+	FROM dbo.Usuarios 
+	WHERE IdUsuario = @id;
+END;
 
-@id as int,
-@nombre as nvarchar(50) = null,
-@descripcion as nvarchar(50) = null as
+--ADD
 
-update Roles set
-	Nombre = isnull(@nombre,Nombre),
-	Descripcion = isnull(@descripcion,Descripcion)
-	where IdRol = @id
+--UPDATE
+CREATE PROCEDURE dbo.Sp_EditarUsuario
+@id AS INT,
+@nombres AS VARCHAR(50) = null,
+@apellidos AS VARCHAR(50) = null,
+@nombreDeUsuario AS VARCHAR(50) = null,
+@pwd AS VARCHAR (50) = null,
+@idrol AS VARCHAR (50) =null 
+AS
+BEGIN
+	UPDATE dbo.Usuarios 
+	SET
+		Nombres = isnull(@nombres,Nombres),
+		Apellidos = isnull(@apellidos,Apellidos),
+		NombreUsuario = isnull(@nombreDeUsuario,NombreUsuario),
+		Contraseña = isnull(@pwd,Contraseña),
+		IdRol = ISNULL(@idrol,IdRol)
+	WHERE IdUsuario = @id
+END;
 
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_Eliminar]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create procedure [dbo].[Sp_Eliminar]
-@id as int as
-delete from usuarios where idusuario = @id
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_EliminarRol]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-Create procedure [dbo].[Sp_EliminarRol]
-@id as int as
-delete from Roles where IdRol = @id
+--DELETE
+CREATE PROCEDURE dbo.Sp_EliminarUsuario
+@id AS INT
+AS
+BEGIN
+	DELETE 
+	FROM dbo.Usuarios 
+	WHERE IdUsuario = @id;
+END;
 
+--ROL
+--GET ALL
+CREATE PROCEDURE dbo.Sp_MostrarRoles
+AS
+BEGIN
+	SELECT * 
+	FROM dbo.Roles;
+END;
 
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_ElimnarCategoria]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create procedure [dbo].[Sp_ElimnarCategoria]
-@id as int as
-delete from Categorias where IdCategoria = @id
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_Mostrar]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+--GET BY ID
+CREATE PROCEDURE dbo.Sp_MostrarRolPorId
+@id INT;
+AS
+BEGIN
+	SELECT *
+	FROM dbo.Roles 
+	WHERE IdRol = @id;
+END;
 
-create proc [dbo].[Sp_Mostrar]
-as 
-select * from Usuarios
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarCategoria]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-Create proc [dbo].[Sp_MostrarCategoria]
-as
-select * from Categorias
+--ADD
+CREATE PROCEDURE dbo.Sp_AgregarRol
+@nombre AS VARCHAR(50),
+@descripcion AS VARCHAR(50)
+AS
+BEGIN
+	INSERT INTO dbo.Roles(Nombre, Descripcion) 
+	VALUES(@nombre, @descripcion)
+END;
 
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarCategoriaPorId]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create procedure [dbo].[Sp_MostrarCategoriaPorId]
-@Id as int
-as
-select * from Categorias where IdCategoria = @Id
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorId]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create procedure [dbo].[Sp_MostrarPorId]
-@id as int
-as 
-select * from usuarios where IdUsuario = @id
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarPorIdRol]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-Create procedure [dbo].[Sp_MostrarPorIdRol]
-@id as int
-as 
-select * from Roles where IdRol = @id
-GO
-/****** Object:  StoredProcedure [dbo].[Sp_MostrarRoles]    Script Date: 29/10/2024 17:31:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-Create procedure [dbo].[Sp_MostrarRoles]
-as 
-select * from Roles
-GO
+--UPDATE
+CREATE PROCEDURE dbo.Sp_EditarRol
+@id AS INT,
+@nombre AS VARCHAR(50) = null,
+@descripcion AS VARCHAR(50) = null
+AS
+BEGIN
+	UPDATE dbo.Roles 
+	SET
+		Nombre = isnull(@nombre,Nombre),
+		Descripcion = isnull(@descripcion,Descripcion)
+	WHERE IdRol = @id;
+END;
+
+--DELETE
+CREATE PROCEDURE dbo.Sp_EliminarRol
+@id INT
+AS
+BEGIN
+	DELETE 
+	FROM dbo.Roles
+	WHERE IdRol = @id;
+END;
+
+--CATEGORIA
+--GET ALL
+CREATE PROCEDURE dbo.Sp_MostrarCategorias
+AS
+BEGIN
+	SELECT *
+	FROM dbo.Categorias;
+END;
+
+--GET BY ID
+CREATE PROCEDURE dbo.Sp_MostrarCategoriaPorId
+@id
+AS
+BEGIN
+	SELECT *
+	FROM dbo.Categorias
+	WHERE IdCategoria = @id;
+END;
+
+--ADD
+CREATE PROCEDURE dbo.Sp_AgregarCategoria
+@nombre VARCHAR(100),
+@descripcion VARCHAR(255)
+AS
+BEGIN
+	INSERT INTO dbo.Categorias (Nombre,Descripcion) 
+	VALUES (@nombre,@descripcion);
+END;
+
+--UPDATE
+CREATE PROCEDURE dbo.Sp_EditarCategoria
+@id AS INT,
+@nombre AS VARCHAR(100) = null,
+@descripcion AS VARCHAR(255) = null
+AS
+BEGIN
+	UPDATE dbo.Categorias 
+	SET
+		Nombre = ISNULL(@nombre, Nombre),
+		Descripcion = ISNULL(@descripcion, Descripcion)
+	WHERE IdCategoria =@id;
+END;
+
+--DELETE
+CREATE PROCEDURE dbo.Sp_EliminarCategoria
+@id AS INT
+AS
+BEGIN
+	DELETE 
+	FROM dbo.Categorias
+	WHERE IdCategoria = @id;
+END;
+
+--VENTA
+--GET ALL
+CREATE PROCEDURE Ventas.Sp_MostrarVentas
+AS
+BEGIN
+	SELECT * 
+	FROM Ventas.Ventas
+END;
+
+--GET BY ID
+CREATE PROCEDURE ------
+
+--ADD
+CREATE PROCEDURE Ventas.Sp_AgregarVenta
+@idcliente INT,
+@idusuario INT,
+@fecha DATETIME,
+@detalles TDetalleVenta READONLY
+AS 
+BEGIN 
+	SET NOCOUNT ON;
+		DECLARE @idventa INT;
+		DECLARE @total DECIMAL(10,2);
+	BEGIN TRY 
+		BEGIN TRANSACTION;
+
+		INSERT INTO Ventas.Ventas (idcliente, idusuario, fechaventa, total) 
+		VALUES (@idcliente, @idusuario, @fecha, 0);
+
+		SET @idventa = SCOPE_IDENTITY();
+		SET @total = 0;
+
+		INSERT INTO Ventas.DetalleVenta (idventa, idproducto, cantidad, preciounitario)
+		SELECT @idventa, idproducto, cantidad, precio
+		FROM @detalles;
+
+		SET @total = (SELECT sum(subtotal) 
+		FROM Ventas.DetalleVenta 
+		WHERE idventa = @idventa);
+
+		UPDATE Ventas.ventas
+		SET total = @total
+		WHERE idventa = @idventa;
+
+		COMMIT TRANSACTION;
+	END TRY
+
+	BEGIN CATCH
+		ROLLBACK TRANSACTION;
+		THROW;
+	END CATCH
+END;
