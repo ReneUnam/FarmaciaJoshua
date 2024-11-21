@@ -286,7 +286,14 @@ BEGIN
 END;
 
 --GET BY ID
-CREATE PROCEDURE ------
+CREATE PROCEDURE Ventas.Sp_MostrarVentaPorId
+@id INT
+AS
+BEGIN
+	SELECT *
+	FROM Ventas.Ventas
+	WHERE IdVenta = @id;
+END;
 
 --ADD
 CREATE PROCEDURE Ventas.Sp_AgregarVenta
@@ -328,3 +335,16 @@ BEGIN
 		THROW;
 	END CATCH
 END;
+
+--DETALLEVENTA
+--GET ALL
+CREATE PROCEDURE Ventas.Sp_MostrarDetalleVenta
+AS
+BEGIN 
+	SELECT * 
+	FROM Ventas.DetalleVenta;
+END;
+--GET BY ID
+--ADD
+--UPDATE
+--DELETE

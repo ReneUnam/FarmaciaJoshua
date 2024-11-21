@@ -20,15 +20,17 @@ public class VentaService : IVentaService
             connection.Open();
             try
             {
-                var command = new SqlCommand("sp_generarVenta", connection);
+                var command = new SqlCommand("Ventas.Sp_AgregarVenta", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Idcliente", venta.IdCliente);
                 command.Parameters.AddWithValue("@idusuario", venta.IdUsuario);
                 command.Parameters.AddWithValue("@fecha", venta.FechaVenta);
+
                 DataTable detalleTable = new DataTable();
                 detalleTable.Columns.Add("Id", typeof(int));
                 detalleTable.Columns.Add("Cantidad", typeof(int));
                 detalleTable.Columns.Add("Precio", typeof(decimal));
+
                 foreach (var detalle in venta.VentaDetalle)
                 {
                     detalleTable.Rows.Add(detalle.IdProducto, detalle.Cantidad, detalle.PrecioUnitario);
@@ -38,9 +40,11 @@ public class VentaService : IVentaService
                     TypeName = "dbo.TDetalleVenta",
                     Value = detalleTable
                 };
+
                 command.Parameters.Add(detalleParameter);
-                
+
                 command.ExecuteNonQuery();
+
                 return venta;
             }
             catch (Exception ex)
@@ -50,31 +54,76 @@ public class VentaService : IVentaService
             }
         }
     }
+    public Venta GetByID(int id)
+    {
+        var venta = new Venta();
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            using (var command = new SqlCommand("Ventas.Sp_MostrarVentaPorId", connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        venta.IdVenta = reader.GetInt32(0);
+                        venta.IdCliente = reader.GetInt32(1);
+                        venta.IdUsuario = reader.GetInt32(2);
+                        venta.FechaVenta = reader.GetDateTime(3);
+                        venta.Total = reader.GetDecimal(4);
+                    }
+                }
+            }
+
+            using (var command = new SqlCommand("SELECT * FROM Ventas.DetalleVenta WHERE IdVenta = @Id", connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                using (var reader = command.ExecuteReader())
+                {
+                    venta.VentaDetalle = new List<DetalleVenta>();
+                    while (reader.Read())
+                    {
+                        venta.VentaDetalle.Add(new DetalleVenta
+                        {
+                            IdDetalleVenta = reader.GetInt32(0),
+                            IdVenta = reader.GetInt32(1),
+                            IdProducto = reader.GetInt32(2),
+                            Cantidad = reader.GetInt32(3),
+                            PrecioUnitario = reader.GetDecimal(4),
+                            Subtotal = reader.GetDecimal(5)
+                        });
+                    }
+                }
+            }
+        }
+        return venta;
+    }
     public IEnumerable<Venta> GetALL()
     {
         var ventas = new List<Venta>();
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var cmd = new SqlCommand("Sp_MostrarVentas", connection);
+            var cmd = new SqlCommand("Ventas.Sp_MostrarVentas", connection);
             cmd.CommandType = CommandType.StoredProcedure;
+
+            using (var reader = cmd.ExecuteReader())
             {
-                using (var reader = cmd.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    ventas.Add(new Venta
                     {
-                        ventas.Add(new Venta
-                        {
-                            IdVenta = (int)reader["IdVenta"],
-                            IdCliente = (int)reader["IdCliente"],
-                            FechaVenta = (DateTime)reader["FechaVenta"],
-                            Total = (decimal)reader["Total"],
-                            VentaDetalle = new List<DetalleVenta>()
-                        });
-                    }
+                        IdVenta = (int)reader["IdVenta"],
+                        IdCliente = (int)reader["IdCliente"],
+                        FechaVenta = (DateTime)reader["FechaVenta"],
+                        Total = (decimal)reader["Total"],
+                        VentaDetalle = new List<DetalleVenta>()
+                    });
                 }
             }
-            using (var command = new SqlCommand("Sp_MostrarDetallesVenta", connection))
+
+            using (var command = new SqlCommand("Ventas.Sp_MostrarDetalleVenta", connection))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
@@ -99,10 +148,6 @@ public class VentaService : IVentaService
         return ventas;
     }
     public void Delete(int id)
-    {
-        throw new NotImplementedException();
-    }
-    public Venta GetByID(int id)
     {
         throw new NotImplementedException();
     }
