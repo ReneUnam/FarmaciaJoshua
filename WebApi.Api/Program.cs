@@ -1,5 +1,7 @@
 ﻿using WebApi.Interface;
 using WebApi.Implementation;
+using System.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
