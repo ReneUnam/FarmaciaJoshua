@@ -336,8 +336,17 @@ BEGIN
 	END CATCH
 END;
 
+--DELETE
+CREATE PROCEDURE Ventas.Sp_EliminarVenta
+@id INT
+AS
+BEGIN
+	DELETE FROM Ventas.Ventas
+	WHERE Idventa = @id;
+END;
+
 --UPDATE
-CREATE PROCEDURE Sp_EditarVenta
+CREATE PROCEDURE Ventas.Sp_EditarVenta
 @id INT,
 @idcliente INT = NULL,
 @idusuario INT = NULL,
@@ -362,7 +371,7 @@ BEGIN
 END;
 
 --UPDATE
-CREATE PROCEDURE Sp_EditarDetalleVenta
+CREATE PROCEDURE Ventas.Sp_EditarDetalleVenta
 @idventa INT,
 @iddetalle INT,
 @idproducto INT = NULL,
@@ -386,6 +395,16 @@ BEGIN
 	SET 
 		Total = @nuevototal
 	WHERE IdVenta = @idventa;
+END;
+
+--DELETE
+CREATE PROCEDURE Ventas.Sp_EliminarDetalleVenta
+@id INT
+AS
+BEGIN
+	DELETE 
+	FROM Ventas.DetalleVenta 
+	WHERE IdVenta = @id;
 END;
 
 --INSERSIONES

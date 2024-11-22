@@ -53,5 +53,21 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                var find = _IVentaService.GetByID(id);
+                if (find == null) return NotFound();
+                _IVentaService.Delete(id);
+                return Ok(new { mensaje = "Borrado correctamente" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
+            }
+        }
+
     }
 }

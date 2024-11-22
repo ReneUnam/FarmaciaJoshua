@@ -159,7 +159,7 @@ public class VentaService : IVentaService
             {
                 try
                 {
-                    var ventaCommand = new SqlCommand( "Sp_EditarVenta",connection,transaction);
+                    var ventaCommand = new SqlCommand("Sp_EditarVenta", connection, transaction);
                     ventaCommand.CommandType = CommandType.StoredProcedure;
 
                     ventaCommand.Parameters.AddWithValue("@id", venta.IdVenta);
@@ -171,7 +171,7 @@ public class VentaService : IVentaService
 
                     foreach (var detail in venta.VentaDetalle)
                     {
-                        var detalleCommand = new SqlCommand("Sp_EditarDetalleVenta", connection,transaction);
+                        var detalleCommand = new SqlCommand("Sp_EditarDetalleVenta", connection, transaction);
                         detalleCommand.CommandType = CommandType.StoredProcedure;
 
                         detalleCommand.Parameters.AddWithValue("@idventa", venta.IdVenta);
@@ -196,6 +196,31 @@ public class VentaService : IVentaService
     }
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    var detalleventa = new SqlCommand("Ventas.Sp_EliminarDetalleVenta",connection,transaction);
+                    detalleventa.CommandType = CommandType.StoredProcedure;
+                    detalleventa.Parameters.AddWithValue("@id", id);
+                    detalleventa.ExecuteNonQuery();
+
+                    var venta = new SqlCommand("Ventas.Sp_EliminarVenta",connection,transaction);
+                    venta.CommandType = CommandType.StoredProcedure;
+                    venta.Parameters.AddWithValue("@id", id);
+                    venta.ExecuteNonQuery();
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
     }
 }
