@@ -16,20 +16,20 @@ namespace WebApi.Controllers
             _IVentaService = ventaService;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult GetById(int id)
-        {
-            var venta = _IVentaService.GetByID(id);
-            if (venta == null) { return NotFound(); }
-            return Ok(venta);
-        }
-
         [HttpGet]
         public ActionResult<IEnumerable<Venta>> GetAll()
         {
             var ventas = _IVentaService.GetALL();
             if (ventas == null) { return NotFound(); }
             return Ok(ventas);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult GetById(int id)
+        {
+            var venta = _IVentaService.GetByID(id);
+            if (venta == null) { return NotFound(); }
+            return Ok(venta);
         }
 
         [HttpPost]
@@ -40,6 +40,16 @@ namespace WebApi.Controllers
                 return BadRequest("Datos no encontrados");
             }
             _IVentaService.Add(venta);
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Update(int id, Venta venta)
+        {
+            var find = _IVentaService.GetByID(id);
+            if (find == null) return NotFound();
+            venta.IdVenta = id;
+            _IVentaService.Update(venta);
             return Ok();
         }
 

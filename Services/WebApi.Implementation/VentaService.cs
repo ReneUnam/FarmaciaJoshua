@@ -20,7 +20,7 @@ public class VentaService : IVentaService
             connection.Open();
             try
             {
-                var command = new SqlCommand("Ventas.Sp_AgregarVenta", connection);
+                var command = new SqlCommand("Sp_AgregarVenta", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Idcliente", venta.IdCliente);
                 command.Parameters.AddWithValue("@idusuario", venta.IdUsuario);
@@ -62,6 +62,7 @@ public class VentaService : IVentaService
             connection.Open();
             using (var command = new SqlCommand("Ventas.Sp_MostrarVentaPorId", connection))
             {
+                command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@id", id);
                 using (var reader = command.ExecuteReader())
                 {
@@ -105,7 +106,7 @@ public class VentaService : IVentaService
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var cmd = new SqlCommand("Ventas.Sp_MostrarVentas", connection);
+            var cmd = new SqlCommand("Sp_MostrarVentas", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             using (var reader = cmd.ExecuteReader())
@@ -115,6 +116,7 @@ public class VentaService : IVentaService
                     ventas.Add(new Venta
                     {
                         IdVenta = (int)reader["IdVenta"],
+                        IdUsuario = (int)reader["IdUsuario"],
                         IdCliente = (int)reader["IdCliente"],
                         FechaVenta = (DateTime)reader["FechaVenta"],
                         Total = (decimal)reader["Total"],
@@ -123,8 +125,9 @@ public class VentaService : IVentaService
                 }
             }
 
-            using (var command = new SqlCommand("Ventas.Sp_MostrarDetalleVenta", connection))
+            using (var command = new SqlCommand("Sp_MostrarDetallesVenta", connection))
             {
+                command.CommandType = CommandType.StoredProcedure;
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
@@ -147,11 +150,51 @@ public class VentaService : IVentaService
         }
         return ventas;
     }
-    public void Delete(int id)
+    public void Update(Venta venta)
     {
-        throw new NotImplementedException();
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    var ventaCommand = new SqlCommand( "Sp_EditarVenta",connection,transaction);
+                    ventaCommand.CommandType = CommandType.StoredProcedure;
+
+                    ventaCommand.Parameters.AddWithValue("@id", venta.IdVenta);
+                    ventaCommand.Parameters.AddWithValue("@idcliente", venta.IdCliente == 0 ? DBNull.Value : venta.IdCliente);
+                    ventaCommand.Parameters.AddWithValue("@idusuario", venta.IdUsuario == 0 ? DBNull.Value : venta.IdUsuario);
+                    ventaCommand.Parameters.AddWithValue("@fecha", venta.FechaVenta ?? (object)DBNull.Value);
+
+                    ventaCommand.ExecuteNonQuery();
+
+                    foreach (var detail in venta.VentaDetalle)
+                    {
+                        var detalleCommand = new SqlCommand("Sp_EditarDetalleVenta", connection,transaction);
+                        detalleCommand.CommandType = CommandType.StoredProcedure;
+
+                        detalleCommand.Parameters.AddWithValue("@idventa", venta.IdVenta);
+                        detalleCommand.Parameters.AddWithValue("@iddetalle", detail.IdDetalleVenta);
+                        detalleCommand.Parameters.AddWithValue("@idproducto", detail.IdProducto == 0 ? DBNull.Value : detail.IdProducto);
+                        detalleCommand.Parameters.AddWithValue("@cantidad", detail.Cantidad == 0 ? DBNull.Value : detail.Cantidad);
+                        detalleCommand.Parameters.AddWithValue("@Precio", detail.PrecioUnitario == default(decimal) ? (object)DBNull.Value : detail.PrecioUnitario);
+
+                        detalleCommand.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
     }
-    public void Update(Venta factura)
+    public void Delete(int id)
     {
         throw new NotImplementedException();
     }

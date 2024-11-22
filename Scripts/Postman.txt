@@ -1,0 +1,52 @@
+{
+    "IdCliente": "2",
+    "IdUsuario": 2,
+    "FechaVenta": "2024-11-16T10:00:00",
+    "VentaDetalle": [
+        {
+            "IdProducto": 1,
+            "Cantidad": 2,
+            "PrecioUnitario": 2.00
+        },
+        {
+            "IdProducto": 2,
+            "Cantidad": 1,
+            "PrecioUnitario": 3.00
+        }
+    ]
+}
+
+{
+  "IdCliente": 2,
+  "IdUsuario": 2,
+  "FechaVenta": "2024-11-20T15:30:00", 
+  "VentaDetalle": [
+    {
+      "IdDetalleVenta": 1,
+      "IdProducto": 101,
+      "Cantidad": 2,
+      "PrecioUnitario": 15.50
+    },
+    {
+      "IdDetalleVenta": 2,
+      "IdProducto": 102,
+      "Cantidad": 1,
+      "PrecioUnitario": 20.00
+    }
+  ]
+}
+
+{
+    "VentaDetalle": [
+      {
+        "IdDetalleVenta": 1,
+        "Cantidad": 3
+      },
+      {
+        "IdDetalleVenta": 2,
+        "Cantidad": 4
+      }
+    ]
+}
+  
+

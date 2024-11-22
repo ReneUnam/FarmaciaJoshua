@@ -68,7 +68,7 @@ namespace WebApi.Controllers
 
             try
             {
-                await _IUsuarioService.add(user, usuario.Contraseña);
+                await _IUsuarioService.add(user, usuario.ContraseÃ±a);
                 return Ok();
             }
             catch (Exception ex)

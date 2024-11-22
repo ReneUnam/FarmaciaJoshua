@@ -336,6 +336,22 @@ BEGIN
 	END CATCH
 END;
 
+--UPDATE
+CREATE PROCEDURE Sp_EditarVenta
+@id INT,
+@idcliente INT = NULL,
+@idusuario INT = NULL,
+@fecha DATETIME = NULL 
+AS
+BEGIN
+	UPDATE Ventas.Ventas
+	SET 
+		IdCliente = ISNULL(@idcliente, IdCliente),
+		IdUsuario = ISNULL(@idusuario, IdUsuario),
+		FechaVenta = ISNULL(@fecha, FechaVenta)
+	WHERE IdVenta = @id;
+END
+
 --DETALLEVENTA
 --GET ALL
 CREATE PROCEDURE Ventas.Sp_MostrarDetalleVenta
@@ -344,7 +360,52 @@ BEGIN
 	SELECT * 
 	FROM Ventas.DetalleVenta;
 END;
---GET BY ID
---ADD
+
 --UPDATE
---DELETE
+CREATE PROCEDURE Sp_EditarDetalleVenta
+@idventa INT,
+@iddetalle INT,
+@idproducto INT = NULL,
+@cantidad INT = NULL,
+@precio DECIMAL(10,2) = NULL
+AS
+BEGIN
+	UPDATE Ventas.DetalleVenta
+	SET	
+		IdProducto = ISNULL(@idproducto, IdProducto),
+		Cantidad = ISNULL(@cantidad, Cantidad),
+		PrecioUnitario = ISNULL(@precio, PrecioUnitario)
+	WHERE IdDetalleVenta = @iddetalle;
+
+	DECLARE @nuevototal DECIMAL(10,2);
+	SELECT @nuevototal = SUM(Cantidad * PrecioUnitario) 
+	FROM Ventas.DetalleVenta
+	WHERE IdVenta = @idventa;
+
+	UPDATE Ventas.Ventas
+	SET 
+		Total = @nuevototal
+	WHERE IdVenta = @idventa;
+END;
+
+--INSERSIONES
+--USUARIOS
+--PROVEEDORES
+--PRODUCTOS
+INSERT INTO productos.Cat_Producto (Nombre, IdCategoria, Estado)
+VALUES 
+('Aspirina', 1, 1),
+('Paracetamol', 2, 1),
+('Ibuprofeno', 1, 1);
+
+INSERT INTO productos.Cat_DetalleProducto (Detalle_Descripcion, Detalle_IdProducto, Detalle_Estado)
+VALUES 
+('500 mg - Caja con 20 tabletas', 1, 1),
+('500 mg - Caja con 10 tabletas', 1, 1),
+('500 mg - Caja con 30 tabletas', 2, 1);
+
+INSERT INTO Productos.Tbl_ProductoAlmacenado (Almc_Detalle_Id, Almc_Proveedor_Id, Almc_Lote, Almc_Existencia, Almc_PrecioCompra, Almc_PrecioVenta, Almc_Estado)
+VALUES 
+(1, 1, 'Lote1234', 50, 1.00, 2.00, 1),
+(2, 1, 'Lote5678', 30, 1.50, 3.00, 1),
+(3, 2, 'Lote9876', 20, 2.00, 4.00, 1);
