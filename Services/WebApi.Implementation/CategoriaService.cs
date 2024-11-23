@@ -98,6 +98,8 @@ public class CategoriaService : ICategoriaService
             cmd.Parameters.AddWithValue("@id", categoria.IdCategoria == 0 ? (object)DBNull.Value : categoria.IdCategoria);
             cmd.Parameters.AddWithValue("@nombre", string.IsNullOrEmpty(categoria.Nombre) ? (object)DBNull.Value : categoria.Nombre);
             cmd.Parameters.AddWithValue("@descripcion", string.IsNullOrEmpty(categoria.Descripcion) ? (object)DBNull.Value : categoria.Descripcion);
+
+            cmd.ExecuteNonQuery();
         }
     }
 
