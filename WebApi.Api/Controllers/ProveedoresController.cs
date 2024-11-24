@@ -8,7 +8,7 @@ using WebApi.Model;
 
 namespace WebApi.Api.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ProveedoresController : ControllerBase

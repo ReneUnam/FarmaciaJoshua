@@ -7,7 +7,7 @@ using WebApi.Model;
 
 namespace WebApi.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="1")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriaController : ControllerBase
