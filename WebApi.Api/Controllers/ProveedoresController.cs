@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Implementation;
 using WebApi.Interface;
@@ -7,6 +8,7 @@ using WebApi.Model;
 
 namespace WebApi.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProveedoresController : ControllerBase
@@ -33,6 +35,7 @@ namespace WebApi.Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<ProveedoresEntities>> GetAll()
         {

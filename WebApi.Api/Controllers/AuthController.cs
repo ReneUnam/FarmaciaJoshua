@@ -24,7 +24,8 @@ namespace WebApi.Api.Controllers
             if (user == null)
                 return BadRequest(new { message = "Datos incorrectos" });
 
-            return Ok(new { user });
+            var token = _IAuthService.GenerateJwtToken(user);
+            return Ok(new { Token = token });
             
         }
 
