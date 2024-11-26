@@ -12,5 +12,6 @@ namespace WebApi.Model
         public string Detalle_Descripcion { get; set; }
         public int Detalle_IdProducto { get; set; }
         public string Detalle_Estado { get; set; }
+        public DateTime? Detalle_FechaVencimiento  { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApi.Interface;
 using WebApi.Model;
+using System.Diagnostics.Tracing;
 
 namespace WebApi.Implementation
 {
@@ -33,6 +34,7 @@ namespace WebApi.Implementation
                 command.Parameters.AddWithValue("@descripcion", cat_detalleproducto.Detalle_Descripcion);
                 command.Parameters.AddWithValue("@idproducto", cat_detalleproducto.Detalle_IdProducto);
                 command.Parameters.AddWithValue("@estado", cat_detalleproducto.Detalle_Estado);
+                command.Parameters.AddWithValue("@fecha", cat_detalleproducto.Detalle_FechaVencimiento);
 
                 command.ExecuteNonQuery();
             }
@@ -73,6 +75,7 @@ namespace WebApi.Implementation
                             Detalle_Descripcion = reader["Descripcion"].ToString(),
                             Detalle_IdProducto = Convert.ToInt32(reader["IdProducto"]),
                             Detalle_Estado = reader["Estado"].ToString(),
+                            Detalle_FechaVencimiento = (DateTime)reader["FechaVenta"],
 
                         });
                     }
@@ -102,6 +105,7 @@ namespace WebApi.Implementation
                             Detalle_Descripcion = reader["Descripcion"].ToString(),
                             Detalle_IdProducto = Convert.ToInt32(reader["IdProducto"]),
                             Detalle_Estado = reader["Estado"].ToString(),
+                            Detalle_FechaVencimiento = (DateTime)reader["FechaVenta"],
 
 
                         };
@@ -123,6 +127,7 @@ namespace WebApi.Implementation
                 cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Descripcion) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Descripcion);
                 cmd.Parameters.AddWithValue("@IdProducto", cat_detalleproducto.Detalle_IdProducto == 0 ? (object)DBNull.Value : cat_detalleproducto.Detalle_IdProducto);
                 cmd.Parameters.AddWithValue("@Estado", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Estado) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Estado);
+                cmd.Parameters.AddWithValue("@fecha", cat_detalleproducto.Detalle_FechaVencimiento ?? (object)DBNull.Value);
 
                 cmd.ExecuteNonQuery();
             }
