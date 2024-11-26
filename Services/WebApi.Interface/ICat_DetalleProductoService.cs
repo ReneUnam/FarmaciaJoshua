@@ -7,7 +7,7 @@ using WebApi.Model;
 
 namespace WebApi.Interface
 {
-    public interface ICat_DetalleProductoEntities
+    public interface ICat_DetalleProductoService
     {
         public Cat_DetalleProductoEntities Add(Cat_DetalleProductoEntities cat_detalleproducto);
         public IEnumerable<Cat_DetalleProductoEntities> GetAll();

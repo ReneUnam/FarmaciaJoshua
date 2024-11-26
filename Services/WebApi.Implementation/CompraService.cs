@@ -45,7 +45,7 @@ public class CompraService : ICompraService
 
                 command.ExecuteNonQuery();
 
-                return venta;
+                return compra;
             }
             catch (Exception ex)
             {
@@ -85,7 +85,7 @@ public class CompraService : ICompraService
                     compra.CompraDetalle = new List<DetalleCompra>();
                     while (reader.Read())
                     {
-                        venta.CompraDetalle.Add(new DetalleCompra
+                        compra.CompraDetalle.Add(new DetalleCompra
                         {
                             IdDetalleCompra = reader.GetInt32(0),
                             IdCompra = reader.GetInt32(1),
@@ -102,7 +102,7 @@ public class CompraService : ICompraService
     }
     public IEnumerable<Compra> GetALL()
     {
-        var compra = new List<Compra>();
+        var compras = new List<Compra>();
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
@@ -113,7 +113,7 @@ public class CompraService : ICompraService
             {
                 while (reader.Read())
                 {
-                    compra.Add(new Compra
+                    compras.Add(new Compra
                     {
                         IdCompra = (int)reader["IdCompra"],
                         IdUsuario = (int)reader["IdUsuario"],
@@ -148,7 +148,7 @@ public class CompraService : ICompraService
                 }
             }
         }
-        return compra;
+        return compras;
     }
     public void Update(Compra compra)
     {
@@ -167,11 +167,11 @@ public class CompraService : ICompraService
                     compraCommand.Parameters.AddWithValue("@idusuario", compra.IdUsuario == 0 ? DBNull.Value : compra.IdUsuario);
                     compraCommand.Parameters.AddWithValue("@fecha", compra.FechaCompra ?? (object)DBNull.Value);
 
-                    ventaCommand.ExecuteNonQuery();
+                    compraCommand.ExecuteNonQuery();
 
                     foreach (var detail in compra.CompraDetalle)
                     {
-                        var detalleCommand = new SqlCommand("Sp_EditarDetalleCompra, connection, transaction);
+                        var detalleCommand = new SqlCommand("Sp_EditarDetalleCompra", connection, transaction);
                         detalleCommand.CommandType = CommandType.StoredProcedure;
 
                         detalleCommand.Parameters.AddWithValue("@idcompra", compra.IdCompra);

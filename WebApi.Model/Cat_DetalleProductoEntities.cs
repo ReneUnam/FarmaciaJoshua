@@ -10,7 +10,7 @@ namespace WebApi.Model
     {
         public int Detalle_Id { get; set; }
         public string Detalle_Descripcion { get; set; }
-        public string Detalle_IdProducto { get; set; }
+        public int Detalle_IdProducto { get; set; }
         public string Detalle_Estado { get; set; }
     }
 }
