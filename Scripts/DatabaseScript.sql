@@ -692,7 +692,7 @@ VALUES
 
 GO
 --BITACORA
-CREATE TABLE dbo.auditoria_productos (
+CREATE TABLE dbo.auditoria(
     id INT IDENTITY(1,1) PRIMARY KEY,
     accion VARCHAR(10),
     id_producto INT,

@@ -15,9 +15,9 @@ namespace WebApi.Api.Controllers
     {
         private readonly IProductoAlmacenadoService _IProductoAlmacenadoService;
 
-        public ProductoAlmacenadoController(IProductoAlmacenadoService productoalmacenado)
+        public ProductoAlmacenadoController(IProductoAlmacenadoService productoAlmacenadoService)
         {
-            IProductoAlmacenadoService = productoalmacenadoService;
+            _IProductoAlmacenadoService = productoAlmacenadoService;
         }
 
         [HttpPost]
@@ -41,7 +41,7 @@ namespace WebApi.Api.Controllers
         {
             try
             {
-                var productoalmacenado = IProductoAlmacenadoService.GetAll();
+                var productoalmacenado = _IProductoAlmacenadoService.GetAll();
                 if (productoalmacenado == null)
                 {
                     return NotFound(new { mensaje = "No hay Productos que mostrar" });
@@ -61,7 +61,7 @@ namespace WebApi.Api.Controllers
         {
             try
             {
-                var found = IProductoAlmacenadoService.GetById(id);
+                var found = _IProductoAlmacenadoService.GetById(id);
                 if (found == null) return NotFound(new { mensaje = "El producto no existe" });
 
                 return Ok(found);
@@ -78,7 +78,7 @@ namespace WebApi.Api.Controllers
         {
             try
             {
-                var find = IProductoAlmacenadoService.GetById(id);
+                var find = _IProductoAlmacenadoService.GetById(id);
                 if (find == null) return NotFound(new { mensaje = "No se encontro el producto" });
                 productoalmacenado.Almc_Id = id;
                 _IProductoAlmacenadoService.Update(productoalmacenado);
@@ -95,7 +95,7 @@ namespace WebApi.Api.Controllers
         {
             try
             {
-                var lolo = IProductoAlmacenadoService.GetById(id);
+                var lolo = _IProductoAlmacenadoService.GetById(id);
                 if (lolo == null) return NotFound();
                 _IProductoAlmacenadoService.Delete(id);
                 return Ok(new { mensaje = "Borrado correctamente" });
