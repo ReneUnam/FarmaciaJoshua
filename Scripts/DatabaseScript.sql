@@ -600,13 +600,13 @@ GO
 CREATE PROCEDURE Productos.Sp_EditarProductos
 @id INT,
 @nombre VARCHAR(100) = null,
-@estado VARCHAR(50) = null,
+@estado VARCHAR(50) = null
 AS
 BEGIN
 	UPDATE Productos.Cat_Producto 
 	SET
 		Nombre = ISNULL(@nombre, Nombre),
-		Estado = ISNULL(@estado, Estado),
+		Estado = ISNULL(@estado, Estado)
 	WHERE IdProducto =@id
 END;
 GO
@@ -693,10 +693,9 @@ BEGIN
 	VALUES (@detalleid,@proveedorid,@lote,@Existencia,@preciocompra,@precioventa,@estado)
 END;
 GO
-
 --UPDATE
 CREATE PROCEDURE Productos.Sp_EditarProductosAlmacenado
-@idproductoalmacenado AS INT
+@idproductoalmacenado AS INT,
 @detalleid AS INT,
 @proveedorid AS INT,
 @lote AS VARCHAR,
