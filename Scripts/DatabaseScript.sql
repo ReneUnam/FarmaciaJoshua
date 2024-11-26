@@ -48,7 +48,7 @@ Create table dbo.Roles(
 	Descripcion varchar(250) not null
 )
 GO
-Create table dbo.Usuarios(
+CREATE TABLE dbo.Usuarios(
 	IdUsuario int primary key identity (1,1),
 	Nombres varchar(50) not null,
 	Apellidos varchar(50) not null,
@@ -57,7 +57,7 @@ Create table dbo.Usuarios(
 	Contraseña nvarchar(50) not null,
 	IdRol int NOT NULL,
 
-	foreign key (IdRol) references dbo.Roles(IdRol)
+	FOREIGN KEY (IdRol) REFERENCES dbo.Roles(IdRol)
 );
 GO
 Create table dbo.Categorias(
@@ -558,83 +558,177 @@ BEGIN
 END;
 GO
 --CAT_PRODUCTO
---Agregar
-create procedure Productos.Sp_AgregarProducto
-@nombre as nvarchar(100),
-@estado as nvarchar(50),
-@fecha as datetime
-as
-insert into Productos.Cat_Producto(Nombre,Estado)
-values (@nombre,@estado,@fecha)
+--ADD
+CREATE PROCEDURE Productos.Sp_AgregarProducto
+@nombre VARCHAR(100),
+@estado VARCHAR(50)
+AS
+BEGIN
+	INSERT INTO Productos.Cat_Producto(Nombre,Estado)
+	VALUES (@nombre,@estado)
+END;
 GO
---EliminarProductos
-create procedure Productos.Sp_ElimnarProductos
-@id as int as
-delete from Productos.Cat_Producto where IdProducto = @id
+--GET ALL
+CREATE PROCEDURE Productos.Sp_MostrarProductos
+AS
+BEGIN
+	SELECT * 
+	FROM Productos.Cat_Producto
+END;
 GO
---Mostrar
-Create proc Productos.Sp_MostrarProductos
-as
-select * from Productos.Cat_Producto
+--DELETE
+CREATE PROCEDURE Productos.Sp_EliminarProductos
+@id AS INT
+AS
+BEGIN
+	DELETE
+	FROM  Productos.Cat_Producto
+	WHERE IdProducto = @id
+END;
 GO
---MostrarPorId
-create procedure Productos.Sp_MostrarProductosPorId
-@Id as int
-as
-select * from Productos.Cat_Producto where IdProducto = @Id
+--GET BY ID
+CREATE PROCEDURE Productos.Sp_MostrarProductosPorId
+@Id AS INT
+AS
+BEGIN
+	SELECT * 
+	FROM Productos.Cat_Producto 
+	WHERE IdProducto = @Id
+END;
 GO
---EditarProductos
-Create procedure Productos.Sp_EditarProductos
-@id as int,
-@nombre as nvarchar(100) = null,
-@estado as nvarchar(50) = null,
-@fecha DateTime
-as
-update Productos.Cat_Producto set
-Nombre = ISNULL(@nombre, Nombre),
-Estado = ISNULL(@estado, Estado)
-where IdProducto =@id
+--UPDATE
+CREATE PROCEDURE Productos.Sp_EditarProductos
+@id INT,
+@nombre VARCHAR(100) = null,
+@estado VARCHAR(50) = null,
+AS
+BEGIN
+	UPDATE Productos.Cat_Producto 
+	SET
+		Nombre = ISNULL(@nombre, Nombre),
+		Estado = ISNULL(@estado, Estado),
+	WHERE IdProducto =@id
+END;
 GO
 --CAT_DETALLEPRODUCTO
---Agregar
-create procedure Productos.Sp_AgregarDetalleProducto
-@descripcion as nvarchar(100),
-@idproducto as Int,
+--ADD
+CREATE PROCEDURE Productos.Sp_AgregarDetalleProducto
+@descripcion varchar(250),
+@idproducto INT,
 @detalle_vencimiento DATETIME,
-@estado as nvarchar
-as
-insert into Productos.Cat_DetalleProducto(Detalle_Descripcion,Detalle_IdProducto,Detalle_FechaVencimiento,)
-values (@descripcion,@idproducto,@detalle_vencimiento,@estado)
+@estado BIT
+AS
+BEGIN
+	INSERT INTO Productos.Cat_DetalleProducto(Detalle_Descripcion,Detalle_IdProducto,Detalle_FechaVencimiento,Detalle_Estado)
+	VALUES (@descripcion,@idproducto,@detalle_vencimiento,@estado)
+END;
 GO
---EliminarProductos
-create procedure Productos.Sp_EliminarDetalleProductos
-@id as int as
-delete from Productos.Cat_DetalleProducto where Detalle_Id = @id
+--DELETE
+CREATE PROCEDURE Productos.Sp_EliminarDetalleProductos
+@id INT
+AS
+BEGIN
+	DELETE FROM Productos.Cat_DetalleProducto 
+	where Detalle_Id = @id
+END;
 GO
---Mostrar
-Create proc Productos.Sp_MostrarDetalleProductos
-as
-select * from Productos.Cat_DetalleProducto
+--GET ALL
+CREATE PROCEDURE Productos.Sp_MostrarDetalleProductos
+AS
+BEGIN
+	SELECT * 
+	FROM Productos.Cat_DetalleProducto
+END;
 GO
---MostrarPorId
-create procedure Productos.Sp_MostrarDetalleProductosPorId
-@Id as int
-as
-select * from Productos.Cat_DetalleProducto where Detalle_Id = @Id
+--GET BY ID
+CREATE PROCEDURE Productos.Sp_MostrarDetalleProductosPorId
+@Id INT
+AS
+BEGIN
+	SELECT * 
+	FROM Productos.Cat_DetalleProducto 
+	WHERE Detalle_Id = @Id
+END;
 GO
---EditarProductos
-Create procedure Productos.Sp_EditarDetalleProductos
-@descripcion as nvarchar(100) = null,
-@idproducto as Int,
+--UPDATE
+CREATE PROCEDURE Productos.Sp_EditarDetalleProductos
+@descripcion varchar(250) = null,
+@detalle_id INT,
+@idproducto INT,
 @detalle_vencimiento DATETIME = null,
-@estado as nvarchar(50) = null
-as
-update Productos.Cat_DetalleProducto set
-Detalle_Descripcion = ISNULL(@descripcion, Detalle_Descripcion),
-Detalle_IdProducto = ISNULL(@idproducto, Detalle_IdProducto),
-Detalle_FechaVencimiento = ISNULL(@detalle_vencimiento, Detalle_FechaVencimiento),
-Detalle_Estado = ISNULL(@estado, Detalle_Estado)
+@estado VARCHAR(50) = null
+AS
+BEGIN
+	UPDATE Productos.Cat_DetalleProducto 
+	SET
+		Detalle_Descripcion = ISNULL(@descripcion, Detalle_Descripcion),
+		Detalle_IdProducto = ISNULL(@idproducto, Detalle_IdProducto),
+		Detalle_FechaVencimiento = ISNULL(@detalle_vencimiento, Detalle_FechaVencimiento),
+		Detalle_Estado = ISNULL(@estado, Detalle_Estado)
+	WHERE Detalle_Id = @detalle_id;
+END;
 GO
+--TBL_PRODUCTOALMACENADO
+--GET ALL
+CREATE PROCEDURE Productos.Sp_MostrarProductosAlmacenados
+AS
+BEGIN
+	SELECT * 
+	FROM Productos.Tbl_ProductoAlmacenado
+END;
+GO
+--GET BY ID
+--ADD
+CREATE PROCEDURE Productos.Sp_AgregarProductoAlmacenado
+@detalleid AS INT,
+@proveedorid AS INT,
+@lote VARCHAR(50),
+@Existencia AS INT,
+@preciocompra AS DECIMAL(10,2),
+@precioventa AS DECIMAL(10,2),
+@estado AS BIT
+AS
+BEGIN
+	INSERT INTO Productos.Tbl_ProductoAlmacenado(Almc_Detalle_Id,Almc_Proveedor_Id,Almc_Lote,Almc_Existencia,Almc_PrecioCompra,Almc_PrecioVenta,Almc_Estado)
+	VALUES (@detalleid,@proveedorid,@lote,@Existencia,@preciocompra,@precioventa,@estado)
+END;
+GO
+
+--UPDATE
+CREATE PROCEDURE Productos.Sp_EditarProductosAlmacenado
+@idproductoalmacenado AS INT
+@detalleid AS INT,
+@proveedorid AS INT,
+@lote AS VARCHAR,
+@Existencia AS INT,
+@preciocompra AS DECIMAL(10,2),
+@precioventa AS DECIMAL(10,2),
+@estado AS BIT
+AS
+BEGIN
+	UPDATE Productos.Tbl_ProductoAlmacenado 
+	SET
+		Almc_Detalle_Id = ISNULL(@detalleid, Almc_Detalle_Id),
+		Almc_Proveedor_Id = ISNULL(@proveedorid, Almc_Proveedor_Id),
+		Almc_Lote = ISNULL(@lote, Almc_Lote),
+		Almc_Existencia = ISNULL(@Existencia, Almc_Existencia),
+		Almc_PrecioCompra = ISNULL(@preciocompra, Almc_PrecioCompra),
+		Almc_PrecioVenta = ISNULL(@precioventa, Almc_PrecioVenta),
+		Almc_Estado = ISNULL(@estado, Almc_Estado)
+	WHERE Almc_Id = @idproductoalmacenado;
+END;
+GO
+
+--DELETE
+CREATE PROCEDURE Productos.Sp_EliminarProductosAlmacenado
+@id AS INT
+AS
+BEGIN
+	DELETE FROM Productos.Tbl_ProductoAlmacenado 
+	WHERE Almc_Id = @id
+END;
+GO
+
 --INSERSIONES
 --ROLES
 INSERT INTO dbo.Roles(Nombre, Descripcion)
