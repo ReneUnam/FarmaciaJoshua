@@ -11,18 +11,18 @@ using WebApi.Model;
 
 namespace WebApi.Implementation
 {
-    public class ProductoAlmacenadoEntities : IProductoAlmacenadoService
+    public class ProductoAlmacenadoService : IProductoAlmacenadoService
     {
         private readonly IConfiguration _configuration;
         private string connectionString;
 
-        public ProductoAlmacenadoEntities(IConfiguration configuration)
+        public ProductoAlmacenadoService(IConfiguration configuration)
         {
             _configuration = configuration;
             connectionString = _configuration.GetConnectionString("connectionSQL");
         }
 
-        public ProductoAlmacenadoEntities Add(ProductoAlmacenadoEntities productoalmacenado)
+        public ProductoAlmacenadoEntities Add(ProductoAlmacenadoEntities Tbl_ProductoAlmacenado)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -41,7 +41,7 @@ namespace WebApi.Implementation
                 command.ExecuteNonQuery();
             }
 
-            return productoalmacenado;
+            return Tbl_ProductoAlmacenado;
         }
 
         public void Delete(int id)
@@ -74,13 +74,13 @@ namespace WebApi.Implementation
                         productoalmacenado.Add(new ProductoAlmacenadoEntities()
                         {
                             Almc_Id = Convert.ToInt32(reader["Almc_Id"]),
-                            Almc_Detalle_Id = reader["Almc_Detalle_Id"].ToInt32(),
-                            Almc_Proveedor_Id = reader["Almc_Proveedor_Id"].ToInt32(),
+                            Almc_Detalle_Id = Convert.ToInt32(reader["Almc_Detalle_Id"]),
+                            Almc_Proveedor_Id = Convert.ToInt32(reader["Almc_Proveedor_Id"]),
                             Almc_Lote = reader["Almc_Lote"].ToString(),
-                            Almc_Existencia = reader["Almc_Existencia"].ToInt32(),
-                            Almc_PrecioCompra = reader["Almc_PrecioCompra"].ToInt32(),
-                            Almc_PrecioVenta = reader["Almc_PrecioVenta"].ToInt32(),
-                            Almc_Estado = reader["Almc_Estado"].ToString(),
+                            Almc_Existencia = Convert.ToInt32(reader["Almc_Existencia"]),
+                            Almc_PrecioCompra = Convert.ToDecimal(reader["Almc_PrecioCompra"]),
+                            Almc_PrecioVenta = Convert.ToDecimal(reader["Almc_PrecioVenta"]),
+                            Almc_Estado = Convert.ToBoolean(reader["Almc_Estado"].ToString()),
 
                         });
                     }
@@ -107,13 +107,13 @@ namespace WebApi.Implementation
                         productoalmacenado = new ProductoAlmacenadoEntities
                         {
                             Almc_Id = Convert.ToInt32(reader["Almc_Id"]),
-                            Almc_Detalle_Id = reader["Almc_Detalle_Id"].ToInt32(),
-                            Almc_Proveedor_Id = reader["Almc_Proveedor_Id"].ToInt32(),
+                            Almc_Detalle_Id = Convert.ToInt32(reader["Almc_Detalle_Id"]),
+                            Almc_Proveedor_Id = Convert.ToInt32(reader["Almc_Proveedor_Id"]),
                             Almc_Lote = reader["Almc_Lote"].ToString(),
-                            Almc_Existencia = reader["Almc_Existencia"].ToInt32(),
-                            Almc_PrecioCompra = reader["Almc_PrecioCompra"].ToInt32(),
-                            Almc_PrecioVenta = reader["Almc_PrecioVenta"].ToInt32(),
-                            Almc_Estado = reader["Almc_Estado"].ToString(),
+                            Almc_Existencia = Convert.ToInt32(reader["Almc_Existencia"]),
+                            Almc_PrecioCompra = Convert.ToDecimal(reader["Almc_PrecioCompra"]),
+                            Almc_PrecioVenta = Convert.ToDecimal(reader["Almc_PrecioVenta"]),
+                            Almc_Estado = Convert.ToBoolean(reader["Almc_Estado"]),
                         };
                     }
                 }
@@ -135,9 +135,10 @@ namespace WebApi.Implementation
                 cmd.Parameters.AddWithValue("@existencia", productoalmacenado.Almc_Existencia == 0 ? (object)DBNull.Value : productoalmacenado.Almc_Existencia);
                 cmd.Parameters.AddWithValue("@preciocompra", productoalmacenado.Almc_PrecioCompra == 0 ? (object)DBNull.Value : productoalmacenado.Almc_PrecioCompra);
                 cmd.Parameters.AddWithValue("@precioventa", productoalmacenado.Almc_PrecioVenta == 0 ? (object)DBNull.Value : productoalmacenado.Almc_PrecioVenta);
-                cmd.Parameters.AddWithValue("@estado", string.IsNullOrEmpty(productoalmacenado.Estado) ? (object)DBNull.Value : productoalmacenado.Estado);
+                cmd.Parameters.AddWithValue("@estado", productoalmacenado.Almc_Estado == null ? (object)DBNull.Value : productoalmacenado.Almc_Estado);
 
                 cmd.ExecuteNonQuery();
             }
         }
     }
+}
