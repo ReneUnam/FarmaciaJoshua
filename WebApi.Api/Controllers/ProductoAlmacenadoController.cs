@@ -11,21 +11,21 @@ namespace WebApi.Api.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class Cat_ProductoController : ControllerBase
+    public class ProductoAlmacenadoController : ControllerBase
     {
-        private readonly ICat_ProductoService _ICat_ProductoService;
+        private readonly IProductoAlmacenadoService _IProductoAlmacenadoService;
 
-        public Cat_ProductoController(ICat_ProductoService cat_producto)
+        public ProductoAlmacenadoController(IProductoAlmacenadoService productoalmacenado)
         {
-            ICat_ProductoService = cat_productoService;
+            IProductoAlmacenadoService = productoalmacenadoService;
         }
 
         [HttpPost]
-        public ActionResult Add(Cat_ProductoEntities cat_producto)
+        public ActionResult Add(ProductoAlmacenadoEntities productoalmacenado)
         {
             try
             {
-                _ICat_ProductoService.Add(cat_producto);
+                _IProductoAlmacenadoService.Add(productoalmacenado);
                 return Ok(new { mensaje = "Agregado correctamente" });
 
             }
@@ -37,16 +37,16 @@ namespace WebApi.Api.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult<IEnumerable<Cat_ProductoEntities>> GetAll()
+        public ActionResult<IEnumerable<ProductoAlmacenadoEntities>> GetAll()
         {
             try
             {
-                var cat_producto = ICat_ProductoService.GetAll();
-                if (cat_producto == null)
+                var productoalmacenado = IProductoAlmacenadoService.GetAll();
+                if (productoalmacenado == null)
                 {
                     return NotFound(new { mensaje = "No hay Productos que mostrar" });
                 }
-                return Ok(cat_producto);
+                return Ok(productoalmacenado);
 
             }
             catch (Exception ex)
@@ -57,11 +57,11 @@ namespace WebApi.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Cat_ProductoEntities> GetByID(int id)
+        public ActionResult<ProductoAlmacenadoEntities> GetByID(int id)
         {
             try
             {
-                var found = ICat_ProductoService.GetById(id);
+                var found = IProductoAlmacenadoService.GetById(id);
                 if (found == null) return NotFound(new { mensaje = "El producto no existe" });
 
                 return Ok(found);
@@ -74,14 +74,14 @@ namespace WebApi.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, Cat_ProductoEntities cat_producto)
+        public ActionResult Update(int id, ProductoAlmacenadoEntities productoalmacenado)
         {
             try
             {
-                var find = ICat_ProductoService.GetById(id);
+                var find = IProductoAlmacenadoService.GetById(id);
                 if (find == null) return NotFound(new { mensaje = "No se encontro el producto" });
-                cat_producto.IdProducto = id;
-                _ICat_ProductoService.Update(cat_producto);
+                productoalmacenado.Almc_Id = id;
+                _IProductoAlmacenadoService.Update(productoalmacenado);
                 return Ok(new { mensaje = "Actualizado correctamente" });
             }
             catch (Exception ex)
@@ -95,9 +95,9 @@ namespace WebApi.Api.Controllers
         {
             try
             {
-                var lolo = _ICat_ProductoService.GetById(id);
+                var lolo = IProductoAlmacenadoService.GetById(id);
                 if (lolo == null) return NotFound();
-                _ICat_ProductoService.Delete(id);
+                _IProductoAlmacenadoService.Delete(id);
                 return Ok(new { mensaje = "Borrado correctamente" });
             }
             catch (Exception ex)

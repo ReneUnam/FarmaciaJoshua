@@ -100,7 +100,7 @@ namespace WebApi.Implementation
                         {
                             Detalle_Id = Convert.ToInt32(reader["DetalleId"]),
                             Detalle_Descripcion = reader["Descripcion"].ToString(),
-                            Detalle_IdProducto = reader["IdProducto"].ToString(),
+                            Detalle_IdProducto = Convert.ToInt32(reader["IdProducto"]),
                             Detalle_Estado = reader["Estado"].ToString(),
 
 
@@ -121,7 +121,7 @@ namespace WebApi.Implementation
 
                 cmd.Parameters.AddWithValue("@DetalleId", cat_detalleproducto.Detalle_Id == 0 ? (object)DBNull.Value : cat_detalleproducto.Detalle_Id);
                 cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Descripcion) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Descripcion);
-                cmd.Parameters.AddWithValue("@IdProducto", string.IsNullOrEmpty(cat_detalleproducto.Detalle_IdProducto) ? (object)DBNull.Value : cat_detalleproducto.Detalle_IdProducto);
+                cmd.Parameters.AddWithValue("@IdProducto", cat_detalleproducto.Detalle_IdProducto == 0 ? (object)DBNull.Value : cat_detalleproducto.Detalle_IdProducto);
                 cmd.Parameters.AddWithValue("@Estado", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Estado) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Estadoz<<);
 
                 cmd.ExecuteNonQuery();

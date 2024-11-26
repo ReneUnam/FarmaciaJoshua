@@ -15,7 +15,7 @@ namespace WebApi.Api.Controllers
     {
         private readonly ICat_DetalleProductoService _ICat_DetalleProductoService;
 
-        public Cat_DetalleProductoController(ICat_DetalleProductoService cat_detalleproductoService)
+        public Cat_DetalleProductoController(ICat_DetalleProductoService cat_detalleproducto)
         {
             ICat_DetalleProductoService = cat_detalleproductoService;
         }
