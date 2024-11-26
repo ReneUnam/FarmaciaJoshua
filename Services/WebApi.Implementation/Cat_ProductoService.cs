@@ -32,7 +32,6 @@ namespace WebApi.Implementation
 
                 command.Parameters.AddWithValue("@nombre", cat_producto.Nombre);
                 command.Parameters.AddWithValue("@estado", cat_producto.Estado);
-                command.Parameters.AddWithValue("@fecha", cat_producto.Fecha_Vencimiento);
 
                 command.ExecuteNonQuery();
             }
@@ -72,7 +71,6 @@ namespace WebApi.Implementation
                             IdProducto = Convert.ToInt32(reader["IdProducto"]),
                             Nombre = reader["Nombre"].ToString(),
                             Estado = reader["Estado"].ToString(),
-                            Fecha_Vencimiento = reader["Fecha"].ToString(),
 
                         });
                     }
@@ -101,7 +99,6 @@ namespace WebApi.Implementation
                             IdProducto = Convert.ToInt32(reader["IdProducto"]),
                             Nombre = reader["Nombre"].ToString(),
                             Estado = reader["Estado"].ToString(),
-                            Fecha_Vencimiento = reader["Fecha"].ToString(),
 
                         };
                     }
@@ -121,7 +118,6 @@ namespace WebApi.Implementation
                 cmd.Parameters.AddWithValue("@id", cat_producto.IdProducto == 0 ? (object)DBNull.Value : cat_producto.IdProducto);
                 cmd.Parameters.AddWithValue("@nombre", string.IsNullOrEmpty(cat_producto.Nombre) ? (object)DBNull.Value : cat_producto.Nombre);
                 cmd.Parameters.AddWithValue("@estado", string.IsNullOrEmpty(cat_producto.Estado) ? (object)DBNull.Value : cat_producto.Estado);
-                cmd.Parameters.AddWithValue("@fecha", string.IsNullOrEmpty(cat_producto.Fecha_Vencimiento) ? (object)DBNull.Value : cat_producto.Fecha_Vencimiento);
 
                 cmd.ExecuteNonQuery();
             }
