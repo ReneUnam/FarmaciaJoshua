@@ -17,7 +17,7 @@ namespace WebApi.Api.Controllers
 
         public Cat_DetalleProductoController(ICat_DetalleProductoService cat_detalleproducto)
         {
-            ICat_DetalleProductoService = cat_detalleproductoService;
+            _ICat_DetalleProductoService = cat_detalleproducto;
         }
 
         [HttpPost]
@@ -35,13 +35,13 @@ namespace WebApi.Api.Controllers
             }
         }
 
-        [Authorize]
+        
         [HttpGet]
         public ActionResult<IEnumerable<Cat_DetalleProductoEntities>> GetAll()
         {
             try
             {
-                var cat_detalleproducto = ICat_DetalleProductoService.GetAll();
+                var cat_detalleproducto = _ICat_DetalleProductoService.GetAll();
                 if (cat_detalleproducto == null)
                 {
                     return NotFound(new { mensaje = "No hay Productos que mostrar" });
@@ -61,7 +61,7 @@ namespace WebApi.Api.Controllers
         {
             try
             {
-                var found = ICat_DetalleProductoService.GetById(id);
+                var found = _ICat_DetalleProductoService.GetById(id);
                 if (found == null) return NotFound(new { mensaje = "El producto no existe" });
 
                 return Ok(found);
@@ -78,7 +78,7 @@ namespace WebApi.Api.Controllers
         {
             try
             {
-                var find = ICat_DetalleProductoService.GetById(id);
+                var find = _ICat_DetalleProductoService.GetById(id);
                 if (find == null) return NotFound(new { mensaje = "No se encontro el producto" });
                 cat_detalleproducto.Detalle_Id = id;
                 _ICat_DetalleProductoService.Update(cat_detalleproducto);
