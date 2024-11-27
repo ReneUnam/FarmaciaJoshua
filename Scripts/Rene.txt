@@ -49,4 +49,17 @@
     ]
 }
   
+{
+  "idProveedor": 1,
+  "idUsuario": 1,
+  "fechaCompra": "2024-11-27T01:36:54.976Z",
+  "compraDetalle": [
+    {
+      "idProducto": 1,
+      "cantidad": 2,
+      "precioUnitario": 2.00,
+    }
+  ]
+}
+
 

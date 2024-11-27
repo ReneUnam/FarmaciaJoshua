@@ -658,11 +658,12 @@ GO
 --ADD
 CREATE PROCEDURE Productos.Sp_AgregarProducto
 @nombre VARCHAR(100),
-@estado VARCHAR(50)
+@estado VARCHAR(50),
+@IdCategoria INT
 AS
 BEGIN
-	INSERT INTO Productos.Cat_Producto(Nombre,Estado)
-	VALUES (@nombre,@estado)
+	INSERT INTO Productos.Cat_Producto(Nombre,Estado,IdCategoria)
+	VALUES (@nombre,@estado, @IdCategoria)
 END;
 GO
 --GET ALL
@@ -697,14 +698,16 @@ GO
 CREATE PROCEDURE Productos.Sp_EditarProductos
 @id INT,
 @nombre VARCHAR(100) = null,
-@estado VARCHAR(50) = null
+@estado VARCHAR(50) = null,
+@IdCategoria INT = null
 AS
 BEGIN
 	UPDATE Productos.Cat_Producto 
 	SET
 		Nombre = ISNULL(@nombre, Nombre),
-		Estado = ISNULL(@estado, Estado)
-	WHERE IdProducto =@id
+		Estado = ISNULL(@estado, Estado),
+		IdCategoria = ISNULL(@IdCategoria, IdCategoria)
+	WHERE IdProducto = @id
 END;
 GO
 --CAT_DETALLEPRODUCTO
@@ -902,7 +905,7 @@ BEGIN
     -- Manejar eliminaciones
     IF EXISTS (SELECT * FROM deleted)
     BEGIN
-        INSERT INTO auditoria_productos (accion, id_producto, fecha, usuario, terminal)
+        INSERT INTO dbo.auditoria (accion, id_producto, fecha, usuario, terminal)
         SELECT 'DELETE', IdProducto, GETDATE(), SYSTEM_USER, @@servername
         FROM deleted;
     END
@@ -910,7 +913,7 @@ BEGIN
     -- Manejar actualizaciones
     IF EXISTS (SELECT * FROM inserted)
     BEGIN
-        INSERT INTO auditoria_productos (accion, id_producto, fecha, usuario, terminal)
+        INSERT INTO dbo.auditoria (accion, id_producto, fecha, usuario, terminal)
         SELECT 'UPDATE', IdProducto, GETDATE(), SYSTEM_USER, @@servername
         FROM inserted;
     END

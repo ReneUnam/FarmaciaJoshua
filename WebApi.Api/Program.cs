@@ -19,6 +19,9 @@ builder.Services.AddScoped<IProveedoresService, ProveedoresService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICat_ProductoService, Cat_ProductoService>();
+builder.Services.AddScoped<ICat_DetalleProductoService, Cat_DetalleProductoService>();
+builder.Services.AddScoped<IProductoAlmacenadoService, ProductoAlmacenadoService>();
+builder.Services.AddScoped<ICompraService, CompraService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
