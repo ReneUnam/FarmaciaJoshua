@@ -387,7 +387,7 @@ BEGIN
 END;
 GO
 --ADD
-CREATE TYPE TDetalleVenta AS TABLE(
+CREATE TYPE Ventas.TDetalleVenta AS TABLE(
 idproducto INT,
 cantidad INT,
 precio DECIMAL(10,2));
@@ -396,7 +396,7 @@ CREATE PROCEDURE Ventas.Sp_AgregarVenta
 @idcliente INT,
 @idusuario INT,
 @fecha DATETIME,
-@detalles TDetalleVenta READONLY
+@detalles Ventas.TDetalleVenta READONLY
 AS 
 BEGIN 
 	SET NOCOUNT ON;
@@ -503,6 +503,102 @@ BEGIN
 	WHERE IdVenta = @id;
 END;
 GO
+--COMPRAS
+--ADD
+CREATE TYPE Compras.TDetalleCompra AS TABLE(
+	IdProducto int,
+	Cantidad int,
+	PrecioUnitario decimal(10,2)
+);
+GO
+--GET ALL
+CREATE PROCEDURE Compras.Sp_MostrarCompras
+AS
+BEGIN
+	SELECT * 
+	FROM Compras.Compras
+END;
+GO
+--GET BY ID
+CREATE PROCEDURE Compras.Sp_MostrarCompraPorId
+@id INT
+AS
+BEGIN
+	SELECT *
+	FROM Compras.Compras
+	WHERE IdCompra = @id;
+END;
+GO
+--UPDATE
+CREATE PROCEDURE Compras.Sp_EditarCompra
+@id INT,
+@idproveedor INT = NULL,
+@idusuario INT = NULL,
+@fecha DATETIME = NULL 
+AS
+BEGIN
+	UPDATE Compras.Compras
+	SET 
+		IdProveedor = ISNULL(@idproveedor, IdProveedor),
+		IdUsuario = ISNULL(@idusuario, IdUsuario),
+		FechaCompra = ISNULL(@fecha, FechaCompra)
+	WHERE IdCompra = @id;
+END;
+GO
+--DELETE
+CREATE PROCEDURE Compras.Sp_EliminarCompra
+@id INT
+AS
+BEGIN
+	DELETE FROM Compras.Compras
+	WHERE IdCompra = @id;
+END;
+GO
+--DETALLE COMPRA
+--GET ALL
+CREATE PROCEDURE Compras.Sp_MostrarDetalleCompra
+AS
+BEGIN 
+	SELECT * 
+	FROM Compras.DetalleCompra;
+END;
+GO
+--UPDATE
+CREATE PROCEDURE Compras.Sp_EditarDetalleCompra
+@idcompra INT,
+@iddetalle INT,
+@idproducto INT = NULL,
+@cantidad INT = NULL,
+@precio DECIMAL(10,2) = NULL
+AS
+BEGIN
+	UPDATE Compras.DetalleCompra
+	SET	
+		IdProducto = ISNULL(@idproducto, IdProducto),
+		Cantidad = ISNULL(@cantidad, Cantidad),
+		PrecioUnitario = ISNULL(@precio, PrecioUnitario)
+	WHERE IdDetalleCompra = @iddetalle;
+
+	DECLARE @nuevototal DECIMAL(10,2);
+	SELECT @nuevototal = SUM(Cantidad * PrecioUnitario) 
+	FROM Compras.DetalleCompra
+	WHERE IdCompra = @idcompra;
+
+	UPDATE Compras.Compras
+	SET 
+		Total = @nuevototal
+	WHERE IdCompra = @idcompra;
+END;
+GO
+--DELETE
+CREATE PROCEDURE Compras.Sp_EliminarDetalleCompra
+@id INT
+AS
+BEGIN
+	DELETE 
+	FROM Compras.DetalleCompra
+	WHERE IdCompra = @id;
+END;
 --PROVEEDOR
 --GET ALL
 CREATE PROCEDURE Compras.Sp_MostrarProveedores

@@ -20,7 +20,7 @@ public class VentaService : IVentaService
             connection.Open();
             try
             {
-                var command = new SqlCommand("Sp_AgregarVenta", connection);
+                var command = new SqlCommand("Ventas.Sp_AgregarVenta", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Idcliente", venta.IdCliente);
                 command.Parameters.AddWithValue("@idusuario", venta.IdUsuario);
@@ -37,7 +37,7 @@ public class VentaService : IVentaService
                 }
                 SqlParameter detalleParameter = new SqlParameter("@Detalles", SqlDbType.Structured)
                 {
-                    TypeName = "dbo.TDetalleVenta",
+                    TypeName = "Ventas.TDetalleVenta",
                     Value = detalleTable
                 };
 
@@ -106,7 +106,7 @@ public class VentaService : IVentaService
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var cmd = new SqlCommand("Sp_MostrarVentas", connection);
+            var cmd = new SqlCommand("Ventas.Sp_MostrarVentas", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             using (var reader = cmd.ExecuteReader())
@@ -125,7 +125,7 @@ public class VentaService : IVentaService
                 }
             }
 
-            using (var command = new SqlCommand("Sp_MostrarDetallesVenta", connection))
+            using (var command = new SqlCommand("Ventas.Sp_MostrarDetallesVenta", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 var reader = command.ExecuteReader();
@@ -159,7 +159,7 @@ public class VentaService : IVentaService
             {
                 try
                 {
-                    var ventaCommand = new SqlCommand("Sp_EditarVenta", connection, transaction);
+                    var ventaCommand = new SqlCommand("Ventas.Sp_EditarVenta", connection, transaction);
                     ventaCommand.CommandType = CommandType.StoredProcedure;
 
                     ventaCommand.Parameters.AddWithValue("@id", venta.IdVenta);
@@ -171,7 +171,7 @@ public class VentaService : IVentaService
 
                     foreach (var detail in venta.VentaDetalle)
                     {
-                        var detalleCommand = new SqlCommand("Sp_EditarDetalleVenta", connection, transaction);
+                        var detalleCommand = new SqlCommand("Ventas.Sp_EditarDetalleVenta", connection, transaction);
                         detalleCommand.CommandType = CommandType.StoredProcedure;
 
                         detalleCommand.Parameters.AddWithValue("@idventa", venta.IdVenta);

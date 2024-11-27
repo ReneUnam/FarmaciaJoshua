@@ -37,7 +37,7 @@ public class CompraService : ICompraService
                 }
                 SqlParameter detalleParameter = new SqlParameter("@Detalles", SqlDbType.Structured)
                 {
-                    TypeName = "dbo.TDetalleCompra",
+                    TypeName = "Compras.TDetalleCompra",
                     Value = detalleTable
                 };
 
