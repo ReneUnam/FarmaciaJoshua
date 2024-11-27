@@ -20,7 +20,7 @@ public class CompraService : ICompraService
             connection.Open();
             try
             {
-                var command = new SqlCommand("Sp_AgregarCompra", connection);
+                var command = new SqlCommand("Compras.Sp_AgregarCompra", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@IdProveedor", compra.IdProveedor);
                 command.Parameters.AddWithValue("@idusuario", compra.IdUsuario);
@@ -106,7 +106,7 @@ public class CompraService : ICompraService
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var cmd = new SqlCommand("Sp_MostrarCompra", connection);
+            var cmd = new SqlCommand("Compras.Sp_MostrarCompra", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             using (var reader = cmd.ExecuteReader())
@@ -125,7 +125,7 @@ public class CompraService : ICompraService
                 }
             }
 
-            using (var command = new SqlCommand("Sp_MostrarDetallesCompra", connection))
+            using (var command = new SqlCommand("Compras.Sp_MostrarDetallesCompra", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 var reader = command.ExecuteReader();
@@ -159,7 +159,7 @@ public class CompraService : ICompraService
             {
                 try
                 {
-                    var compraCommand = new SqlCommand("Sp_EditarCompra", connection, transaction);
+                    var compraCommand = new SqlCommand("Compras.Sp_EditarCompra", connection, transaction);
                     compraCommand.CommandType = CommandType.StoredProcedure;
 
                     compraCommand.Parameters.AddWithValue("@id", compra.IdCompra);
@@ -171,7 +171,7 @@ public class CompraService : ICompraService
 
                     foreach (var detail in compra.CompraDetalle)
                     {
-                        var detalleCommand = new SqlCommand("Sp_EditarDetalleCompra", connection, transaction);
+                        var detalleCommand = new SqlCommand("Compras.Sp_EditarDetalleCompra", connection, transaction);
                         detalleCommand.CommandType = CommandType.StoredProcedure;
 
                         detalleCommand.Parameters.AddWithValue("@idcompra", compra.IdCompra);
@@ -208,7 +208,7 @@ public class CompraService : ICompraService
                     detallecompra.Parameters.AddWithValue("@id", id);
                     detallecompra.ExecuteNonQuery();
 
-                    var compra = new SqlCommand("compras.Sp_EliminarCompra", connection, transaction);
+                    var compra = new SqlCommand("Compras.Sp_EliminarCompra", connection, transaction);
                     compra.CommandType = CommandType.StoredProcedure;
                     compra.Parameters.AddWithValue("@id", id);
                     compra.ExecuteNonQuery();

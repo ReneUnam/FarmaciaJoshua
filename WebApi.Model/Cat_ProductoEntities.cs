@@ -11,5 +11,6 @@ namespace WebApi.Model
         public int IdProducto { get; set; }
         public string Nombre { get; set; }
         public string Estado { get; set; }
+        public int IdCategoria { get; set; }
     }
 }

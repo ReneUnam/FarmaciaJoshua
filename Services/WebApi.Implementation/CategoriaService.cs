@@ -41,7 +41,7 @@ public class CategoriaService : ICategoriaService
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var cmd = new SqlCommand("Sp_MostrarCategoria", connection);
+            var cmd = new SqlCommand("Sp_MostrarCategorias", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             using (var reader = cmd.ExecuteReader())
@@ -107,7 +107,7 @@ public class CategoriaService : ICategoriaService
     {
         using (var connection = new SqlConnection(connectionString))
         {
-            var command = new SqlCommand("Sp_ElimnarCategoria", connection);
+            var command = new SqlCommand("Sp_EliminarCategoria", connection);
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@id", id);
 
