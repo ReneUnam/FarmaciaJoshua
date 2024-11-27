@@ -125,7 +125,7 @@ public class VentaService : IVentaService
                 }
             }
 
-            using (var command = new SqlCommand("Ventas.Sp_MostrarDetallesVenta", connection))
+            using (var command = new SqlCommand("Ventas.Sp_MostrarDetalleVenta", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 var reader = command.ExecuteReader();
