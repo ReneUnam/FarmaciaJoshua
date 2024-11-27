@@ -32,7 +32,7 @@ namespace WebApi.Implementation
 
                 command.Parameters.AddWithValue("@nombre", cat_producto.Nombre);
                 command.Parameters.AddWithValue("@estado", cat_producto.Estado);
-                command.Parameters.AddWithValue("@idRol", cat_producto.IdCategoria);
+                command.Parameters.AddWithValue("@idcategoria", cat_producto.IdCategoria);
 
                 command.ExecuteNonQuery();
             }
@@ -44,7 +44,7 @@ namespace WebApi.Implementation
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                var command = new SqlCommand("Productos.Sp_ElimnarProductos", connection);
+                var command = new SqlCommand("Productos.Sp_EliminarProductos", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@id", id);
 
