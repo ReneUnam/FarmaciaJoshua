@@ -35,7 +35,7 @@ namespace WebApi.Api.Controllers
             }
         }
 
-        [Authorize]
+        
         [HttpGet]
         public ActionResult<IEnumerable<ProveedoresEntities>> GetAll()
         {

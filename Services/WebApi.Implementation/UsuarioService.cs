@@ -45,7 +45,7 @@ public class UsuarioService : IUsuarioService
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var cmd = new SqlCommand("Sp_Mostrar", connection);
+            var cmd = new SqlCommand("Sp_MostrarUsuarios", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             using (var reader = cmd.ExecuteReader())
@@ -71,7 +71,7 @@ public class UsuarioService : IUsuarioService
     {
         using (var connection = new SqlConnection(connectionString))
         {
-            var command = new SqlCommand("Sp_MostrarPorId", connection);
+            var command = new SqlCommand("Sp_MostrarUsuarioPorId", connection);
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@id", id);
 
@@ -101,7 +101,7 @@ public class UsuarioService : IUsuarioService
         using (var conexion = new SqlConnection(connectionString))
         {
             conexion.Open();
-            var cmd = new SqlCommand("Sp_Editar", conexion);
+            var cmd = new SqlCommand("Sp_EditarUsuario", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@id", usuario.IdUsuario == 0 ? (object)DBNull.Value : usuario.IdUsuario);
@@ -119,7 +119,7 @@ public class UsuarioService : IUsuarioService
     {
         using (var connection = new SqlConnection(connectionString))
         {
-            var command = new SqlCommand("Sp_Eliminar", connection);
+            var command = new SqlCommand("Sp_EliminarUsuario", connection);
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@id", id);
 

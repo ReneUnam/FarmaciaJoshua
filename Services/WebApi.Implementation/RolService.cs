@@ -21,7 +21,7 @@ public class RolService : IRolService
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var command = new SqlCommand("Sp_AgregarRoles", connection);
+            var command = new SqlCommand("Sp_AgregarRol", connection);
             command.CommandType = CommandType.StoredProcedure;
 
             command.Parameters.AddWithValue("@nombre", rol.Nombre);
@@ -62,7 +62,7 @@ public class RolService : IRolService
     {
         using (var connection = new SqlConnection(connectionString))
         {
-            var command = new SqlCommand("Sp_MostrarPorIdRol", connection);
+            var command = new SqlCommand("Sp_MostrarRolPorId", connection);
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@id", id);
 
