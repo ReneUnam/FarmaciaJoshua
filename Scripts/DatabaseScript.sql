@@ -599,6 +599,7 @@ BEGIN
 	FROM Compras.DetalleCompra
 	WHERE IdCompra = @id;
 END;
+GO
 --PROVEEDOR
 --GET ALL
 CREATE PROCEDURE Compras.Sp_MostrarProveedores
