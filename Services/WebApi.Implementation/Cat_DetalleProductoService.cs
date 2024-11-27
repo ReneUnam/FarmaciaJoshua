@@ -72,10 +72,10 @@ namespace WebApi.Implementation
                         cat_detalleproducto.Add(new Cat_DetalleProductoEntities()
                         {
                             Detalle_Id = Convert.ToInt32(reader["Detalle_Id"]),
-                            Detalle_Descripcion = reader["Descripcion"].ToString(),
-                            Detalle_IdProducto = Convert.ToInt32(reader["IdProducto"]),
-                            Detalle_Estado = reader["Estado"].ToString(),
-                            Detalle_FechaVencimiento = (DateTime)reader["FechaVenta"],
+                            Detalle_Descripcion = reader["Detalle_Descripcion"].ToString(),
+                            Detalle_IdProducto = Convert.ToInt32(reader["Detalle_IdProducto"]),
+                            Detalle_Estado = reader["Detalle_Estado"].ToString(),
+                            Detalle_FechaVencimiento = (DateTime)reader["Detalle_FechaVencimiento"]
 
                         });
                     }
@@ -101,13 +101,11 @@ namespace WebApi.Implementation
                     {
                         cat_detalleproducto = new Cat_DetalleProductoEntities
                         {
-                            Detalle_Id = Convert.ToInt32(reader["DetalleId"]),
-                            Detalle_Descripcion = reader["Descripcion"].ToString(),
-                            Detalle_IdProducto = Convert.ToInt32(reader["IdProducto"]),
-                            Detalle_Estado = reader["Estado"].ToString(),
-                            Detalle_FechaVencimiento = (DateTime)reader["FechaVenta"],
-
-
+                            Detalle_Id = Convert.ToInt32(reader["Detalle_Id"]),
+                            Detalle_Descripcion = reader["Detalle_Descripcion"].ToString(),
+                            Detalle_IdProducto = Convert.ToInt32(reader["Detalle_IdProducto"]),
+                            Detalle_Estado = reader["Detalle_Estado"].ToString(),
+                            Detalle_FechaVencimiento = (DateTime)reader["Detalle_FechaVencimiento"]
                         };
                     }
                 }
@@ -122,12 +120,11 @@ namespace WebApi.Implementation
                 conexion.Open();
                 var cmd = new SqlCommand("Productos.Sp_EditarDetalleProductos", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@DetalleId", cat_detalleproducto.Detalle_Id == 0 ? (object)DBNull.Value : cat_detalleproducto.Detalle_Id);
+                
+                cmd.Parameters.AddWithValue("@Detalle_Id", cat_detalleproducto.Detalle_Id);
                 cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Descripcion) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Descripcion);
                 cmd.Parameters.AddWithValue("@IdProducto", cat_detalleproducto.Detalle_IdProducto == 0 ? (object)DBNull.Value : cat_detalleproducto.Detalle_IdProducto);
                 cmd.Parameters.AddWithValue("@Estado", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Estado) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Estado);
-                cmd.Parameters.AddWithValue("@fecha", cat_detalleproducto.Detalle_FechaVencimiento ?? (object)DBNull.Value);
 
                 cmd.ExecuteNonQuery();
             }

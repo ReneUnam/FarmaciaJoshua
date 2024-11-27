@@ -778,6 +778,15 @@ BEGIN
 END;
 GO
 --GET BY ID
+CREATE PROCEDURE Productos.Sp_MostrarProductosAlmacenadoPorId
+@Id AS INT
+AS
+BEGIN
+	SELECT * 
+	FROM Productos.Tbl_ProductoAlmacenado 
+	WHERE Almc_Id = @Id
+END;
+GO
 --ADD
 CREATE PROCEDURE Productos.Sp_AgregarProductoAlmacenado
 @detalleid AS INT,
