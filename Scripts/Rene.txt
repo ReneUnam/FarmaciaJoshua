@@ -62,4 +62,14 @@
   ]
 }
 
+{
+  "idProveedor": 2,
+  "compraDetalle": [
+    {
+      "idDetalleCompra": 1,
+      "cantidad": 5
+    }
+  ]
+}
+
 

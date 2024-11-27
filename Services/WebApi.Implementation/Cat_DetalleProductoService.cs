@@ -71,7 +71,7 @@ namespace WebApi.Implementation
                     {
                         cat_detalleproducto.Add(new Cat_DetalleProductoEntities()
                         {
-                            Detalle_Id = Convert.ToInt32(reader["DetalleId"]),
+                            Detalle_Id = Convert.ToInt32(reader["Detalle_Id"]),
                             Detalle_Descripcion = reader["Descripcion"].ToString(),
                             Detalle_IdProducto = Convert.ToInt32(reader["IdProducto"]),
                             Detalle_Estado = reader["Estado"].ToString(),

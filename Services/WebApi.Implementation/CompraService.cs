@@ -106,7 +106,7 @@ public class CompraService : ICompraService
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            var cmd = new SqlCommand("Compras.Sp_MostrarCompra", connection);
+            var cmd = new SqlCommand("Compras.Sp_MostrarCompras", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             using (var reader = cmd.ExecuteReader())
@@ -125,7 +125,7 @@ public class CompraService : ICompraService
                 }
             }
 
-            using (var command = new SqlCommand("Compras.Sp_MostrarDetallesCompra", connection))
+            using (var command = new SqlCommand("Compras.Sp_MostrarDetalleCompra", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 var reader = command.ExecuteReader();
