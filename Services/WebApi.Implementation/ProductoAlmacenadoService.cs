@@ -64,7 +64,7 @@ namespace WebApi.Implementation
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var cmd = new SqlCommand("Productos.Sp_MostrarProductosAlmacenado", connection);
+                var cmd = new SqlCommand("Productos.Sp_MostrarProductosAlmacenados", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var reader = cmd.ExecuteReader())
@@ -129,10 +129,11 @@ namespace WebApi.Implementation
                 var cmd = new SqlCommand("Productos.Sp_EditarProductosAlmacenado", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
 
+                cmd.Parameters.AddWithValue("@idproductoalmacenado", productoalmacenado.Almc_Id);
                 cmd.Parameters.AddWithValue("@detalleid", productoalmacenado.Almc_Detalle_Id == 0 ? (object)DBNull.Value : productoalmacenado.Almc_Detalle_Id);
                 cmd.Parameters.AddWithValue("@proveedorid", productoalmacenado.Almc_Proveedor_Id == 0 ? (object)DBNull.Value : productoalmacenado.Almc_Proveedor_Id);
                 cmd.Parameters.AddWithValue("@lote", string.IsNullOrEmpty(productoalmacenado.Almc_Lote) ? (object)DBNull.Value : productoalmacenado.Almc_Lote);
-                cmd.Parameters.AddWithValue("@existencia", productoalmacenado.Almc_Existencia == 0 ? (object)DBNull.Value : productoalmacenado.Almc_Existencia);
+                cmd.Parameters.AddWithValue("@Existencia", productoalmacenado.Almc_Existencia == 0 ? (object)DBNull.Value : productoalmacenado.Almc_Existencia);
                 cmd.Parameters.AddWithValue("@preciocompra", productoalmacenado.Almc_PrecioCompra == 0 ? (object)DBNull.Value : productoalmacenado.Almc_PrecioCompra);
                 cmd.Parameters.AddWithValue("@precioventa", productoalmacenado.Almc_PrecioVenta == 0 ? (object)DBNull.Value : productoalmacenado.Almc_PrecioVenta);
                 cmd.Parameters.AddWithValue("@estado", productoalmacenado.Almc_Estado == null ? (object)DBNull.Value : productoalmacenado.Almc_Estado);

@@ -34,7 +34,7 @@ namespace WebApi.Implementation
                 command.Parameters.AddWithValue("@descripcion", cat_detalleproducto.Detalle_Descripcion);
                 command.Parameters.AddWithValue("@idproducto", cat_detalleproducto.Detalle_IdProducto);
                 command.Parameters.AddWithValue("@estado", cat_detalleproducto.Detalle_Estado);
-                command.Parameters.AddWithValue("@fecha", cat_detalleproducto.Detalle_FechaVencimiento);
+                command.Parameters.AddWithValue("@detalle_vencimiento   ", cat_detalleproducto.Detalle_FechaVencimiento);
 
                 command.ExecuteNonQuery();
             }
