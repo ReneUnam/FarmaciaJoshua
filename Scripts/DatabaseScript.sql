@@ -438,7 +438,7 @@ END;
 GO
 CREATE PROCEDURE Ventas.Sp_ProcesarVentaDetalle
     @IDVenta INT,   
-    @Detalle AS Ventas.TDetalleVentaProcesar READONLY
+    @Detalle AS Ventas.TDetalleVenta READONLY
 AS
 BEGIN
     SET NOCOUNT ON;
