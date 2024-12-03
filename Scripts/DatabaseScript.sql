@@ -423,6 +423,10 @@ BEGIN
 		SET total = @total
 		WHERE idventa = @idventa;
 
+		EXEC Ventas.sp_ProcesarVentaDetalle
+        @IDVenta = @idventa,
+        @Detalle = @detalles;
+
 		COMMIT TRANSACTION;
 	END TRY
 
@@ -430,6 +434,122 @@ BEGIN
 		ROLLBACK TRANSACTION;
 		THROW;
 	END CATCH
+END;
+GO
+CREATE PROCEDURE Ventas.Sp_ProcesarVentaDetalle
+    @IDVenta INT,   
+    @Detalle AS Ventas.TDetalleVentaProcesar READONLY
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        DECLARE @IDProducto INT, @CantidadSolicitada INT;
+
+        -- Tabla temporal para gestionar datos del Detalle Type
+        CREATE TABLE #DetallePendiente (
+            IDProducto INT PRIMARY KEY,
+            Cantidad INT
+        );
+
+        -- Tabla temporal para depuración (no requerida)
+        CREATE TABLE #LogDebug (
+            Step NVARCHAR(50),
+            IDProducto INT,
+            CantidadSolicitada INT,
+            CantidadTomar INT,
+            Fecha DATETIME
+        );
+
+        -- Transferencia de registros del Type a la tabla temporal
+        INSERT INTO #DetallePendiente (IDProducto, Cantidad)
+        SELECT IDProducto, Cantidad FROM @Detalle;
+
+        -- Ciclo para recorrer cada elemento en la tabla temporal
+        WHILE EXISTS (SELECT 1 FROM #DetallePendiente WHERE Cantidad > 0)
+        BEGIN
+            -- Seleccionar el primer elemento cuya cantidad sea mayor a 0
+            SELECT TOP 1 
+                @IDProducto = IDProducto,
+                @CantidadSolicitada = Cantidad
+            FROM #DetallePendiente
+            WHERE Cantidad > 0;
+
+            -- Monitoreo de proceso en el SP
+            INSERT INTO #LogDebug (Step, IDProducto, CantidadSolicitada, CantidadTomar, Fecha)
+            VALUES ('Inicio Producto', @IDProducto, @CantidadSolicitada, NULL, GETDATE());
+
+            -- Ciclo enfocado a la gestión de existencias
+            WHILE @CantidadSolicitada > 0
+            BEGIN
+                DECLARE @IDProductoAlmacenado INT, @CantidadActual INT, @CantidadTomar INT;
+
+                -- Seleccionar el inventario disponible del producto
+                SELECT TOP 1 
+					@IDProductoAlmacenado = p.Almc_Id, -- Ajustar al nombre de columna correcto
+					@CantidadActual = p.Almc_Existencia -- Ajustar al nombre de columna correcto
+				FROM Productos.Tbl_ProductoAlmacenado p
+				WHERE p.Almc_Detalle_Id = @IDProducto -- Cambiar idProducto al nombre correcto (Almc_Detalle_Id)
+  				AND p.Almc_Existencia > 0 -- Asegurar consistencia con el nombre correcto
+				ORDER BY p.Almc_Lote ASC; -- Ajustar a Almc_Lote o cualquier columna relevante
+                IF @IDProductoAlmacenado IS NULL
+                BEGIN
+                    THROW 50001, 'Inventario insuficiente para completar la solicitud.', 1;
+                END;
+
+                -- Determinar la cantidad a tomar
+                SET @CantidadTomar = CASE 
+                                        WHEN @CantidadSolicitada <= @CantidadActual THEN @CantidadSolicitada
+                                        ELSE @CantidadActual
+                                     END;
+
+                -- Actualización de inventario
+                UPDATE Productos.Tbl_ProductoAlmacenado
+                SET Almc_Existencia = Almc_Existencia - @CantidadTomar
+                WHERE Almc_Id = @IDProductoAlmacenado;
+
+                -- Insertar en el detalle de la venta
+                INSERT INTO Ventas.DetalleVenta (IDVenta, IDProducto, Cantidad, PrecioUnitario)
+                VALUES (@IDVenta, @IDProducto, @CantidadTomar, 0);
+
+                -- Monitoreo del segundo proceso
+                INSERT INTO #LogDebug (Step, IDProducto, CantidadSolicitada, CantidadTomar, Fecha)
+                VALUES ('Procesar Inventario', @IDProducto, @CantidadSolicitada, @CantidadTomar, GETDATE());
+
+                -- Actualizar la cantidad solicitada tras la operación realizada
+                SET @CantidadSolicitada = @CantidadSolicitada - @CantidadTomar;
+
+                -- Actualizar tabla temporal
+                UPDATE #DetallePendiente
+                SET Cantidad = @CantidadSolicitada
+                WHERE IDProducto = @IDProducto;
+
+                -- Eliminar registros sin pendientes
+                DELETE FROM #DetallePendiente
+                WHERE IDProducto = @IDProducto AND Cantidad <= 0;
+            END;
+        END;
+
+        -- Monitoreo de fin de ciclo
+        INSERT INTO #LogDebug (Step, IDProducto, CantidadSolicitada, CantidadTomar, Fecha)
+        VALUES ('Fin Proceso', NULL, NULL, NULL, GETDATE());
+
+        COMMIT TRANSACTION;
+
+        -- Mostrar el historial de monitoreo
+        SELECT * FROM #LogDebug;
+    END TRY
+    BEGIN CATCH
+
+        ROLLBACK TRANSACTION;
+
+        -- Mostrar el historial de monitoreo
+        SELECT * FROM #LogDebug;
+
+        THROW;
+    END CATCH;
 END;
 GO
 --DELETE
@@ -510,6 +630,45 @@ CREATE TYPE Compras.TDetalleCompra AS TABLE(
 	Cantidad int,
 	PrecioUnitario decimal(10,2)
 );
+CREATE PROCEDURE Compras.Sp_AgregarCompra
+@idproveedor INT,
+@idusuario INT,
+@fecha DATETIME,
+@detalles TDetalleCompra READONLY 
+AS 
+BEGIN 
+	SET NOCOUNT ON;
+		DECLARE @idcompra INT;
+		DECLARE @total DECIMAL(10,2);
+	BEGIN TRY 
+		BEGIN TRANSACTION;
+
+		INSERT INTO Compras.Compras (IdProveedor, IdUsuario, FechaCompra, Total) 
+		VALUES (@idproveedor, @idusuario, @fecha, 0);
+
+		SET @idcompra = SCOPE_IDENTITY();
+		SET @total = 0;
+
+		INSERT INTO Compras.DetalleCompra(IdCompra, IdProducto, Cantidad, PrecioUnitario)
+		SELECT @idcompra, idproducto, cantidad, precio
+		FROM @detalles;
+
+		SET @total = (SELECT sum(subtotal) 
+		FROM Compras.DetalleCompra
+		WHERE IdCompra = @idcompra);
+
+		UPDATE Compras.Compras
+		SET total = @total
+		WHERE IdCompra = @idcompra;
+
+		COMMIT TRANSACTION;
+	END TRY
+
+	BEGIN CATCH
+		ROLLBACK TRANSACTION;
+		THROW;
+	END CATCH
+END;
 GO
 --GET ALL
 CREATE PROCEDURE Compras.Sp_MostrarCompras
@@ -880,7 +1039,7 @@ INSERT INTO Productos.Tbl_ProductoAlmacenado (Almc_Detalle_Id, Almc_Proveedor_Id
 VALUES 
 (1, 1, 'Lote1234', 50, 1.00, 2.00, 1),
 (2, 1, 'Lote5678', 30, 1.50, 3.00, 1),
-(3, 2, 'Lote9876', 20, 2.00, 4.00, 1);
+(3, 2, 'Lote9876', 10, 2.00, 4.00, 1);
 
 --VENTA
 INSERT INTO ventas.Ventas(idcliente, idusuario, fechaventa, total) 

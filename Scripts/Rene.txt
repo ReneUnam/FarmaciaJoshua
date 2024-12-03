@@ -1,6 +1,6 @@
 {
-    "IdCliente": "2",
-    "IdUsuario": 2,
+    "IdCliente": "1",
+    "IdUsuario": 1,
     "FechaVenta": "2024-11-16T10:00:00",
     "VentaDetalle": [
         {
@@ -15,36 +15,11 @@
         }
     ]
 }
-
-{
-  "IdCliente": 2,
-  "IdUsuario": 2,
-  "FechaVenta": "2024-11-20T15:30:00", 
-  "VentaDetalle": [
-    {
-      "IdDetalleVenta": 1,
-      "IdProducto": 101,
-      "Cantidad": 2,
-      "PrecioUnitario": 15.50
-    },
-    {
-      "IdDetalleVenta": 2,
-      "IdProducto": 102,
-      "Cantidad": 1,
-      "PrecioUnitario": 20.00
-    }
-  ]
-}
-
 {
     "VentaDetalle": [
       {
-        "IdDetalleVenta": 1,
-        "Cantidad": 3
-      },
-      {
         "IdDetalleVenta": 2,
-        "Cantidad": 4
+        "Cantidad": 10
       }
     ]
 }
@@ -57,7 +32,7 @@
     {
       "idProducto": 1,
       "cantidad": 2,
-      "precioUnitario": 2.00,
+      "precioUnitario": 2.00
     }
   ]
 }
@@ -73,3 +48,20 @@
 }
 
 
+Usuario
+{
+  "nombres": "Isaac Mauricio",
+  "apellidos": "Carballo Carranza",
+  "nombreUsuario": "Isaac",
+  "contraseña": "bimbo",
+  "idRol": 1
+}
+
+
+{
+  "nombres": "Julian Omar",
+  "apellidos": "Matus Arguello",
+  "nombreUsuario": "Julian",
+  "contraseña": "lolo",
+  "idRol": 2
+}

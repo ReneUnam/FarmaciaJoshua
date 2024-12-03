@@ -37,7 +37,7 @@ public class VentaService : IVentaService
                 }
                 SqlParameter detalleParameter = new SqlParameter("@Detalles", SqlDbType.Structured)
                 {
-                    TypeName = "Ventas.TDetalleVenta",
+                    TypeName  = "Ventas.TDetalleVenta",
                     Value = detalleTable
                 };
 
