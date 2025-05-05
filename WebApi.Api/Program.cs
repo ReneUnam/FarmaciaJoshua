@@ -36,6 +36,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Corspolicy",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
@@ -78,6 +89,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+app.UseCors("Corspolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(endpoints =>
