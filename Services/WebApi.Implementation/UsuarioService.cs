@@ -104,11 +104,20 @@ public class UsuarioService : IUsuarioService
             var cmd = new SqlCommand("Sp_EditarUsuario", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
 
+            byte[] salt = null;
+            string hashedPassword = null;
+
+            if(!string.IsNullOrEmpty(usuario.Contraseña))
+            {
+                hashedPassword = CreatePasswordHash(usuario.Contraseña, out salt);
+            }
+
             cmd.Parameters.AddWithValue("@id", usuario.IdUsuario == 0 ? (object)DBNull.Value : usuario.IdUsuario);
             cmd.Parameters.AddWithValue("@nombres", string.IsNullOrEmpty(usuario.Nombres) ? (object)DBNull.Value : usuario.Nombres);
             cmd.Parameters.AddWithValue("@apellidos", string.IsNullOrEmpty(usuario.Apellidos) ? (object)DBNull.Value : usuario.Apellidos);
             cmd.Parameters.AddWithValue("@nombreDeUsuario", string.IsNullOrEmpty(usuario.NombreUsuario) ? (object)DBNull.Value : usuario.NombreUsuario);
-            cmd.Parameters.AddWithValue("@pwd", string.IsNullOrEmpty(usuario.Contraseña) ? (object)DBNull.Value : usuario.Contraseña);
+            cmd.Parameters.AddWithValue("@pwd", string.IsNullOrEmpty(hashedPassword) ? (object)DBNull.Value : hashedPassword);
+            cmd.Parameters.AddWithValue("@salt", salt == null ? (object)DBNull.Value : salt);
             cmd.Parameters.AddWithValue("@idrol", usuario.IdRol == 0 ? (object)DBNull.Value : usuario.IdRol);
 
             cmd.ExecuteNonQuery();
