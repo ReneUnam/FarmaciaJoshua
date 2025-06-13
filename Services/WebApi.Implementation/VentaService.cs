@@ -33,7 +33,7 @@ public class VentaService : IVentaService
 
                 foreach (var detalle in venta.VentaDetalle)
                 {
-                    detalleTable.Rows.Add(detalle.IdProducto, detalle.Cantidad, detalle.PrecioUnitario);
+                    detalleTable.Rows.Add(detalle.IdProductoAlmacenado, detalle.Cantidad, detalle.PrecioUnitario);
                 }
                 SqlParameter detalleParameter = new SqlParameter("@Detalles", SqlDbType.Structured)
                 {
@@ -89,7 +89,7 @@ public class VentaService : IVentaService
                         {
                             IdDetalleVenta = reader.GetInt32(0),
                             IdVenta = reader.GetInt32(1),
-                            IdProducto = reader.GetInt32(2),
+                            IdProductoAlmacenado = reader.GetInt32(2),
                             Cantidad = reader.GetInt32(3),
                             PrecioUnitario = reader.GetDecimal(4),
                             Subtotal = reader.GetDecimal(5)
@@ -116,10 +116,14 @@ public class VentaService : IVentaService
                     ventas.Add(new Venta
                     {
                         IdVenta = (int)reader["IdVenta"],
+                        NumeroFactura = reader["NumeroFactura"] as string,
                         IdUsuario = (int)reader["IdUsuario"],
                         IdCliente = (int)reader["IdCliente"],
                         FechaVenta = (DateTime)reader["FechaVenta"],
+                        Descuento = (decimal)reader["Descuento"],
+                        Subtotal = (decimal)reader["Subtotal"],
                         Total = (decimal)reader["Total"],
+                        Estado = (bool)reader["Estado"],
                         VentaDetalle = new List<DetalleVenta>()
                     });
                 }
@@ -135,10 +139,12 @@ public class VentaService : IVentaService
                     {
                         IdDetalleVenta = (int)reader["IdDetalleVenta"],
                         IdVenta = (int)reader["IdVenta"],
-                        IdProducto = (int)reader["IdProducto"],
+                        IdProductoAlmacenado = (int)reader["IdProductoAlmacenado"],
                         Cantidad = (int)reader["Cantidad"],
                         PrecioUnitario = (decimal)reader["PrecioUnitario"],
-                        Subtotal = (decimal)reader["Subtotal"]
+                        Descuento = (decimal)reader["Descuento"],
+                        Subtotal = (decimal)reader["Subtotal"],
+                        Total = (decimal)reader["Total"]
                     };
                     var venta = ventas.FirstOrDefault(find => find.IdVenta == detalle.IdVenta);
                     if (venta != null)
@@ -176,7 +182,7 @@ public class VentaService : IVentaService
 
                         detalleCommand.Parameters.AddWithValue("@idventa", venta.IdVenta);
                         detalleCommand.Parameters.AddWithValue("@iddetalle", detail.IdDetalleVenta);
-                        detalleCommand.Parameters.AddWithValue("@idproducto", detail.IdProducto == 0 ? DBNull.Value : detail.IdProducto);
+                        detalleCommand.Parameters.AddWithValue("@idproducto", detail.IdProductoAlmacenado == 0 ? DBNull.Value : detail.IdProductoAlmacenado);
                         detalleCommand.Parameters.AddWithValue("@cantidad", detail.Cantidad == 0 ? DBNull.Value : detail.Cantidad);
                         detalleCommand.Parameters.AddWithValue("@Precio", detail.PrecioUnitario == default(decimal) ? (object)DBNull.Value : detail.PrecioUnitario);
 
