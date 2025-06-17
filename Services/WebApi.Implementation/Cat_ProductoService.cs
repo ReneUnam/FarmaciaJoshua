@@ -67,13 +67,54 @@ namespace WebApi.Implementation
                 {
                     while (reader.Read())
                     {
-                        cat_producto.Add(new Cat_ProductoEntities()
+                        int idProducto = Convert.ToInt32(reader["IdProducto"]);
+                        var producto = cat_producto.FirstOrDefault(p => p.IdProducto == idProducto);
+
+                        if (producto == null)
                         {
-                            IdProducto = Convert.ToInt32(reader["IdProducto"]),
-                            Nombre = reader["Nombre"].ToString(),
-                            Estado = reader["Estado"].ToString(),
-                            IdCategoria = Convert.ToInt32(reader["IdCategoria"])
-                        });
+                            producto = new Cat_ProductoEntities
+                            {
+                                IdProducto = idProducto,
+                                Nombre = reader["Nombre"].ToString(),
+                                IdCategoria = Convert.ToInt32(reader["IdCategoria"]),
+                                IdLaboratorio = Convert.ToInt32(reader["IdLaboratorio"]),
+                                Estado = Convert.ToBoolean(reader["Estado"]),
+                                DetalleProducto = new List<Cat_DetalleProductoEntities>()
+                            };
+                            cat_producto.Add(producto);
+                        }
+
+                        int detalleId = Convert.ToInt32(reader["Detalle_Id"]);
+                        var detalle = producto.DetalleProducto.FirstOrDefault(d => d.Detalle_Id == detalleId);
+                        if (detalle == null)
+                        {
+                            detalle = new Cat_DetalleProductoEntities
+                            {
+                                Detalle_Id = detalleId,
+                                Detalle_IdProducto = reader["Detalle_IdProducto"]!= DBNull.Value ? Convert.ToInt32(reader["Detalle_IdProducto"]) : 0,
+                                Detalle_Descripcion = reader["Detalle_Descripcion"].ToString(),
+                                Detalle_IdUnidadMedida = Convert.ToInt32(reader["Detalle_IdUnidadMedida"]),
+                                Detalle_FechaVencimiento = reader["Detalle_FechaVencimiento"] as DateTime?,
+                                Detalle_Estado = Convert.ToBoolean(reader["Detalle_Estado"]),
+                                ProductoAlmacenado = new List<ProductoAlmacenadoEntities>()
+                            };
+                            producto.DetalleProducto.Add(detalle);
+                        }
+                        if (reader["Almc_Id"] != DBNull.Value)
+                        {
+                            detalle.ProductoAlmacenado.Add(new ProductoAlmacenadoEntities
+                            {
+                                Almc_Id = Convert.ToInt32(reader["Almc_Id"]),
+                                Almc_Detalle_Id = reader["Almc_Detalle_Id"]!= DBNull.Value ? Convert.ToInt32(reader["Almc_Detalle_Id"]) : 0,
+                                Almc_Proveedor_Id = Convert.ToInt32(reader["Almc_Proveedor_Id"]),
+                                Almc_Lote = reader["Almc_Lote"].ToString(),
+                                Almc_Existencia = Convert.ToInt32(reader["Almc_Existencia"]),
+                                Almc_PrecioCompra = Convert.ToDecimal(reader["Almc_PrecioCompra"]),
+                                Almc_PrecioVenta = Convert.ToDecimal(reader["Almc_PrecioVenta"]),
+                                Almc_Estado = Convert.ToBoolean(reader["Almc_Estado"])
+
+                            });
+                        }
                     }
                 }
             }
@@ -99,7 +140,7 @@ namespace WebApi.Implementation
                         {
                             IdProducto = Convert.ToInt32(reader["IdProducto"]),
                             Nombre = reader["Nombre"].ToString(),
-                            Estado = reader["Estado"].ToString(),
+                            // Estado = reader["Estado"].ToString(),
                             IdCategoria = Convert.ToInt32(reader["IdCategoria"])
                         };
                     }
@@ -118,7 +159,7 @@ namespace WebApi.Implementation
 
                 cmd.Parameters.AddWithValue("@id", cat_producto.IdProducto == 0 ? (object)DBNull.Value : cat_producto.IdProducto);
                 cmd.Parameters.AddWithValue("@nombre", string.IsNullOrEmpty(cat_producto.Nombre) ? (object)DBNull.Value : cat_producto.Nombre);
-                cmd.Parameters.AddWithValue("@estado", string.IsNullOrEmpty(cat_producto.Estado) ? (object)DBNull.Value : cat_producto.Estado);
+                // cmd.Parameters.AddWithValue("@estado", string.IsNullOrEmpty(cat_producto.Estado) ? (object)DBNull.Value : cat_producto.Estado);
                 cmd.Parameters.AddWithValue("@idcategoria", cat_producto.IdCategoria == 0 ? (object)DBNull.Value : cat_producto.IdCategoria);
 
                 cmd.ExecuteNonQuery();

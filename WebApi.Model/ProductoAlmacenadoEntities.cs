@@ -15,7 +15,7 @@ namespace WebApi.Model;
         public int Almc_Existencia { get; set; }
         public decimal Almc_PrecioCompra { get; set; }
         public decimal Almc_PrecioVenta { get; set; }
-        public bool? Almc_Estado { get; set; }
+        public bool Almc_Estado { get; set; }
     }
 
 

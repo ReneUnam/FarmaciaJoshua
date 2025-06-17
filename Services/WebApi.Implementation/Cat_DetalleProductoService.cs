@@ -74,7 +74,7 @@ namespace WebApi.Implementation
                             Detalle_Id = Convert.ToInt32(reader["Detalle_Id"]),
                             Detalle_Descripcion = reader["Detalle_Descripcion"].ToString(),
                             Detalle_IdProducto = Convert.ToInt32(reader["Detalle_IdProducto"]),
-                            Detalle_Estado = reader["Detalle_Estado"].ToString(),
+                            // Detalle_Estado = reader["Detalle_Estado"].ToString(),
                             Detalle_FechaVencimiento = (DateTime)reader["Detalle_FechaVencimiento"]
 
                         });
@@ -104,7 +104,7 @@ namespace WebApi.Implementation
                             Detalle_Id = Convert.ToInt32(reader["Detalle_Id"]),
                             Detalle_Descripcion = reader["Detalle_Descripcion"].ToString(),
                             Detalle_IdProducto = Convert.ToInt32(reader["Detalle_IdProducto"]),
-                            Detalle_Estado = reader["Detalle_Estado"].ToString(),
+                            // Detalle_Estado = reader["Detalle_Estado"].ToString(),
                             Detalle_FechaVencimiento = (DateTime)reader["Detalle_FechaVencimiento"]
                         };
                     }
@@ -124,7 +124,7 @@ namespace WebApi.Implementation
                 cmd.Parameters.AddWithValue("@Detalle_Id", cat_detalleproducto.Detalle_Id);
                 cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Descripcion) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Descripcion);
                 cmd.Parameters.AddWithValue("@IdProducto", cat_detalleproducto.Detalle_IdProducto == 0 ? (object)DBNull.Value : cat_detalleproducto.Detalle_IdProducto);
-                cmd.Parameters.AddWithValue("@Estado", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Estado) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Estado);
+                // cmd.Parameters.AddWithValue("@Estado", string.IsNullOrEmpty(cat_detalleproducto.Detalle_Estado) ? (object)DBNull.Value : cat_detalleproducto.Detalle_Estado);
 
                 cmd.ExecuteNonQuery();
             }
