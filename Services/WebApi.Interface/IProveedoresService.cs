@@ -13,6 +13,6 @@ namespace WebApi.Interface
         public IEnumerable<ProveedoresEntities> GetByEstado(int estado);
         public ProveedoresEntities GetById(int id);
         public void Update(ProveedoresEntities proveedores);
-        public void Delete(int id);
+        public void Delete(int id, int estado);
     }
 }

@@ -39,13 +39,14 @@ namespace WebApi.Implementation
             return proveedores;
         }
 
-        public void Delete(int id)
+        public void Delete(int id, int estado)
         {
             using (var connection = new SqlConnection(connectionString))
             {
                 var command = new SqlCommand("Compras.Sp_ElimnarProveedores", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@Estado", estado);
 
                 connection.Open();
                 command.ExecuteNonQuery();

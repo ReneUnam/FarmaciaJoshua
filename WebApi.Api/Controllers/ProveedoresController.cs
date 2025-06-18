@@ -90,14 +90,14 @@ namespace WebApi.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, [FromQuery] int estado = 0)
         {
             try
             {
-                var lolo = _IProveedoresservice.GetById(id);
-                if (lolo == null) return NotFound();
-                _IProveedoresservice.Delete(id);
-                return Ok(new { mensaje = "Borrado correctamente" });
+                var proveedores = _IProveedoresservice.GetById(id);
+                if (proveedores == null) return NotFound();
+                _IProveedoresservice.Delete(id, estado);
+                return Ok(new { mensaje = estado == 0 ? "Proveedor desactivado correctamente" : "Proveedor activado correctamente" });
             }
             catch (Exception ex)
             {
