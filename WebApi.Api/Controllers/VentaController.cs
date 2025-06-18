@@ -15,6 +15,21 @@ namespace WebApi.Controllers
         {
             _IVentaService = ventaService;
         }
+        
+        [HttpGet("proximo-numero")]
+        public IActionResult ObtenerProximoNumeroFactura()
+        {
+            try
+            {
+                var numero = _IVentaService.ObtenerProximoNumeroFactura();
+                return Ok(new { proximoNumeroFactura = numero });
+            }
+            catch (Exception error)
+            {
+                // Log error (no mostrado aquí)
+                return StatusCode(500, new { error = "Error al obtener el número de factura" });
+            }
+        }
 
         [HttpGet]
         public ActionResult<IEnumerable<Venta>> GetAll()

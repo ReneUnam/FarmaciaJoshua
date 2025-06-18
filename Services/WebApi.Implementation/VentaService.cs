@@ -54,6 +54,31 @@ public class VentaService : IVentaService
             }
         }
     }
+
+    public string ObtenerProximoNumeroFactura()
+    {
+        string proximoNumero = null;
+
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            using (var command = new SqlCommand("Ventas.Sp_ObtenerNumeroFacturaVisual", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        proximoNumero = reader["ProximoNumeroFactura"] as string;
+                    }
+                }
+            }
+        }
+
+        return proximoNumero;
+    }
     public Venta GetByID(int id)
     {
         var venta = new Venta();
@@ -69,10 +94,14 @@ public class VentaService : IVentaService
                     if (reader.Read())
                     {
                         venta.IdVenta = reader.GetInt32(0);
-                        venta.IdCliente = reader.GetInt32(1);
-                        venta.IdUsuario = reader.GetInt32(2);
-                        venta.FechaVenta = reader.GetDateTime(3);
-                        venta.Total = reader.GetDecimal(4);
+                        venta.NumeroFactura = reader["NumeroFactura"] as string;
+                        venta.IdCliente = reader.GetInt32(2);
+                        venta.IdUsuario = reader.GetInt32(3);
+                        venta.FechaVenta = reader.GetDateTime(4);
+                        venta.Descuento = reader.GetDecimal(5);
+                        venta.Subtotal = reader.GetDecimal(6);
+                        venta.Total = reader.GetDecimal(7);
+                        venta.Estado = reader.GetBoolean(8);
                     }
                 }
             }
@@ -92,7 +121,9 @@ public class VentaService : IVentaService
                             IdProductoAlmacenado = reader.GetInt32(2),
                             Cantidad = reader.GetInt32(3),
                             PrecioUnitario = reader.GetDecimal(4),
-                            Subtotal = reader.GetDecimal(5)
+                            Descuento = reader.GetDecimal(5),
+                            Subtotal = reader.GetDecimal(6),
+                            Total = reader.GetDecimal(7)
                         });
                     }
                 }
@@ -209,12 +240,12 @@ public class VentaService : IVentaService
             {
                 try
                 {
-                    var detalleventa = new SqlCommand("Ventas.Sp_EliminarDetalleVenta",connection,transaction);
+                    var detalleventa = new SqlCommand("Ventas.Sp_EliminarDetalleVenta", connection, transaction);
                     detalleventa.CommandType = CommandType.StoredProcedure;
                     detalleventa.Parameters.AddWithValue("@id", id);
                     detalleventa.ExecuteNonQuery();
 
-                    var venta = new SqlCommand("Ventas.Sp_EliminarVenta",connection,transaction);
+                    var venta = new SqlCommand("Ventas.Sp_EliminarVenta", connection, transaction);
                     venta.CommandType = CommandType.StoredProcedure;
                     venta.Parameters.AddWithValue("@id", id);
                     venta.ExecuteNonQuery();
