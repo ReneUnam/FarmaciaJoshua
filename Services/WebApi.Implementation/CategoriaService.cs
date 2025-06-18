@@ -34,7 +34,7 @@ public class CategoriaService : ICategoriaService
         return categoria;
     }
 
-    public IEnumerable<CategoriaEntities> GetAll()
+    public IEnumerable<CategoriaEntities> GetByEstado(int estado)
     {
         var categoria = new List<CategoriaEntities>();
 
@@ -43,6 +43,8 @@ public class CategoriaService : ICategoriaService
             connection.Open();
             var cmd = new SqlCommand("Sp_MostrarCategorias", connection);
             cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Estado", estado);
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -59,10 +61,22 @@ public class CategoriaService : ICategoriaService
         }
         return categoria;
     }
+    
+    public bool ActivarCategoria(int id)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            var command = new SqlCommand("UPDATE Categorias SET Estado = 1 WHERE IdCategoria = @id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            int rowsAffected = command.ExecuteNonQuery();
+            return rowsAffected > 0;
+        }
+    }
 
     public CategoriaEntities GetById(int id)
     {
-        using(var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(connectionString))
         {
             var command = new SqlCommand("Sp_MostrarCategoriaPorId", connection);
             command.CommandType = CommandType.StoredProcedure;

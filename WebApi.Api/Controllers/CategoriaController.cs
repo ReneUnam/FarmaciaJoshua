@@ -34,13 +34,13 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<CategoriaEntities>> GetAll()
+        [HttpGet("estado/{estado}")]
+        public ActionResult<IEnumerable<CategoriaEntities>> GetByEstado(int estado)
         {
             try
             {
-                var categoria = _ICategoriaservice.GetAll();
-                if (categoria == null)
+                var categoria = _ICategoriaservice.GetByEstado(estado);
+                if (categoria == null || !categoria.Any())
                 {
                     return NotFound(new { mensaje = "No hay categorias que mostrar" });
                 }
@@ -52,6 +52,24 @@ namespace WebApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
             }
 
+        }
+
+        [HttpPut("activar/{id}")]
+        public IActionResult ActivarCategoria(int id)
+        {
+            try
+            {
+                var fueActivada = _ICategoriaservice.ActivarCategoria(id);
+                if (!fueActivada) {
+                    return NotFound(new { mensaje = "Categoría no encontrada" });
+                }
+
+                return Ok(new { mensaje = "Categoria activada correctamente" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]
