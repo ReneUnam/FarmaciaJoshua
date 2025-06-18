@@ -38,7 +38,7 @@ public class UsuarioService : IUsuarioService
         return usuario;
     }*/
 
-    public IEnumerable<UsuarioEntities> GetAll()
+    public IEnumerable<UsuarioEntities> GetByEstado(int estado)
     {
         var usuarios = new List<UsuarioEntities>();
 
@@ -47,6 +47,8 @@ public class UsuarioService : IUsuarioService
             connection.Open();
             var cmd = new SqlCommand("Sp_MostrarUsuarios", connection);
             cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@estado", estado);
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -121,6 +123,18 @@ public class UsuarioService : IUsuarioService
             cmd.Parameters.AddWithValue("@idrol", usuario.IdRol == 0 ? (object)DBNull.Value : usuario.IdRol);
 
             cmd.ExecuteNonQuery();
+        }
+    }
+
+    public bool ActivarUsuario(int id)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            var command = new SqlCommand("UPDATE Usuarios SET Estado = 1 WHERE IdUsuario = @id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            int rowsAffected = command.ExecuteNonQuery();
+            return rowsAffected > 0;
         }
     }
 

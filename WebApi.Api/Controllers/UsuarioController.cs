@@ -17,24 +17,22 @@ namespace WebApi.Controllers
             _IUsuarioService = usuarioService;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<UsuarioEntities>> GetAll()
+        [HttpGet("estado/{estado}")]
+        public ActionResult<IEnumerable<UsuarioEntities>> GetByEstado(int estado)
         {
             try
             {
-                var usuarios = _IUsuarioService.GetAll();
-                if (usuarios == null)
+                var usuarios = _IUsuarioService.GetByEstado(estado);
+                if (usuarios == null || !usuarios.Any())
                 {
-                    return NotFound(new { mensaje = "No hay usuarios que mostrar" });
+                    return NotFound(new { mensaje = "No hay usuarios con el estado especificado" });
                 }
                 return Ok(usuarios);
-
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
             }
-
         }
 
         [HttpGet("{id}")]
@@ -87,6 +85,25 @@ namespace WebApi.Controllers
                 usuario.IdUsuario = id;
                 _IUsuarioService.Update(usuario);
                 return Ok(new { mensaje = "Actualizado correctamente" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
+            }
+
+        }
+
+        [HttpPut("{id}/activar")]
+        public ActionResult ActivarUsuarios(int id)
+        {
+            try
+            {
+                var fueActivada = _IUsuarioService.ActivarUsuario(id);
+                if (!fueActivada)
+                {
+                    return NotFound(new { mensaje = "No se pudo encontrar el usuario" });
+                }
+                return Ok(new { mensaje = "Usuario activado correctamente" });
             }
             catch (Exception ex)
             {
