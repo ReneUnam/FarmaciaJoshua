@@ -93,34 +93,15 @@ namespace WebApi.Controllers
 
         }
 
-        [HttpPut("{id}/activar")]
-        public ActionResult ActivarUsuarios(int id)
-        {
-            try
-            {
-                var fueActivada = _IUsuarioService.ActivarUsuario(id);
-                if (!fueActivada)
-                {
-                    return NotFound(new { mensaje = "No se pudo encontrar el usuario" });
-                }
-                return Ok(new { mensaje = "Usuario activado correctamente" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
-            }
-
-        }
-
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, [FromQuery] int estado = 0)
         {
             try
             {
                 var find = _IUsuarioService.GetById(id);
                 if (find == null) return NotFound();
-                _IUsuarioService.Delete(id);
-                return Ok(new { mensaje = "Borrado correctamente" });
+                _IUsuarioService.Delete(id, estado);
+                return Ok(new { mensaje = estado == 0 ? "Usuario desactivado correctamente" : "Usuario activado correctamente" });
             }
             catch (Exception ex)
             {

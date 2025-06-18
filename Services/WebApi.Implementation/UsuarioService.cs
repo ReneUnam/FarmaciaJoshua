@@ -126,25 +126,14 @@ public class UsuarioService : IUsuarioService
         }
     }
 
-    public bool ActivarUsuario(int id)
-    {
-        using (var connection = new SqlConnection(connectionString))
-        {
-            connection.Open();
-            var command = new SqlCommand("UPDATE Usuarios SET Estado = 1 WHERE IdUsuario = @id", connection);
-            command.Parameters.AddWithValue("@id", id);
-            int rowsAffected = command.ExecuteNonQuery();
-            return rowsAffected > 0;
-        }
-    }
-
-    public void Delete(int id)
+    public void Delete(int id, int estado)
     {
         using (var connection = new SqlConnection(connectionString))
         {
             var command = new SqlCommand("Sp_EliminarUsuario", connection);
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@estado", estado);
 
             connection.Open();
             command.ExecuteNonQuery();

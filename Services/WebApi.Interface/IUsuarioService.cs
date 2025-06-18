@@ -8,7 +8,6 @@ public interface IUsuarioService
         Task<UsuarioEntities> add(UsuarioEntities usuario, string password);
         public IEnumerable<UsuarioEntities> GetByEstado(int estado);
         public UsuarioEntities GetById(int id);
-        public bool ActivarUsuario(int id);
         public void Update(UsuarioEntities usuario);
-        public void Delete(int id);
+        public void Delete(int id, int estado);
 }
