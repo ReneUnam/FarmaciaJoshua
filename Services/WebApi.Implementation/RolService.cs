@@ -32,7 +32,7 @@ public class RolService : IRolService
         return rol;
     }
 
-    public IEnumerable<RolesEntities> GetAll()
+    public IEnumerable<RolesEntities> GetByEstado(int estado)
     {
         var rol = new List<RolesEntities>();
 
@@ -41,6 +41,8 @@ public class RolService : IRolService
             connection.Open();
             var cmd = new SqlCommand("Sp_MostrarRoles", connection);
             cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@estado", estado);
 
             using (var reader = cmd.ExecuteReader())
             {

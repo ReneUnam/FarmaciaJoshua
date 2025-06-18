@@ -17,25 +17,24 @@ namespace WebApi.Controllers
             _IRolService = rolService;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<RolesEntities>> GetAll()
+        [HttpGet ("estado/{estado}")]
+        public ActionResult<IEnumerable<RolesEntities>> GetByEstado(int estado)
         {
             try
             {
-                var rol = _IRolService.GetAll();
-                if (rol == null)
+                var rol = _IRolService.GetByEstado(estado);
+                if (rol == null || !rol.Any())
                 {
                     return NotFound(new { mensaje = "No hay un rol que mostrar" });
                 }
                 return Ok(rol);
-
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
             }
-
         }
+
 
         [HttpGet("{id}")]
         public ActionResult<RolesEntities> GetByID(int id)

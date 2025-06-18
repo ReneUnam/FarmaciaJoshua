@@ -34,25 +34,25 @@ namespace WebApi.Api.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<ClientesEntities>> GetAll()
+        [HttpGet("estado/{estado}")]
+        public ActionResult<IEnumerable<ClientesEntities>> GetByEstado(int estado)
         {
             try
             {
-                var clientes = _IClientesservice.GetAll();
-                if (clientes == null)
+                var clientes = _IClientesservice.GetByEstado(estado);
+                if (clientes == null || !clientes.Any())
                 {
-                    return NotFound(new { mensaje = "No hay clientes que mostrar" });
+                    return NotFound(new { mensaje = "No hay clientes con el estado especificado" });
                 }
                 return Ok(clientes);
-
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
             }
-
         }
+
+        
 
         [HttpGet("{id}")]
         public ActionResult<ClientesEntities> GetByID(int id)

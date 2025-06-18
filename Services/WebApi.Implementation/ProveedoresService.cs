@@ -52,7 +52,7 @@ namespace WebApi.Implementation
             }
         }
 
-        public IEnumerable<ProveedoresEntities> GetAll()
+        public IEnumerable<ProveedoresEntities> GetByEstado(int estado)
         {
             var proveedores = new List<ProveedoresEntities>();
 
@@ -61,6 +61,8 @@ namespace WebApi.Implementation
                 connection.Open();
                 var cmd = new SqlCommand("Compras.Sp_MostrarProveedores", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@estado", estado);
 
                 using (var reader = cmd.ExecuteReader())
                 {

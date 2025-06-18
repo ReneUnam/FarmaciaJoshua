@@ -10,7 +10,7 @@ namespace WebApi.Interface
     public interface IProveedoresService
     {
         public ProveedoresEntities Add(ProveedoresEntities proveedores);
-        public IEnumerable<ProveedoresEntities> GetAll();
+        public IEnumerable<ProveedoresEntities> GetByEstado(int estado);
         public ProveedoresEntities GetById(int id);
         public void Update(ProveedoresEntities proveedores);
         public void Delete(int id);

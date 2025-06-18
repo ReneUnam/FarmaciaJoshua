@@ -36,25 +36,24 @@ namespace WebApi.Api.Controllers
         }
 
         
-        [HttpGet]
-        public ActionResult<IEnumerable<ProveedoresEntities>> GetAll()
+        [HttpGet("estado/{estado}")]
+        public ActionResult<IEnumerable<ProveedoresEntities>> GetByEstado(int estado)
         {
             try
             {
-                var proveedores = _IProveedoresservice.GetAll();
-                if (proveedores == null)
+                var proveedores = _IProveedoresservice.GetByEstado(estado);
+                if (proveedores == null || !proveedores.Any())
                 {
-                    return NotFound(new { mensaje = "No hay Proveedores que mostrar" });
+                    return NotFound(new { mensaje = "No hay proveedores con el estado especificado" });
                 }
                 return Ok(proveedores);
-
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
             }
-
         }
+
 
         [HttpGet("{id}")]
         public ActionResult<ProveedoresEntities> GetByID(int id)
