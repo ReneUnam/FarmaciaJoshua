@@ -54,24 +54,6 @@ namespace WebApi.Controllers
 
         }
 
-        [HttpPut("activar/{id}")]
-        public IActionResult ActivarCategoria(int id)
-        {
-            try
-            {
-                var fueActivada = _ICategoriaservice.ActivarCategoria(id);
-                if (!fueActivada) {
-                    return NotFound(new { mensaje = "Categoría no encontrada" });
-                }
-
-                return Ok(new { mensaje = "Categoria activada correctamente" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
-            }
-        }
-
         [HttpGet("{id}")]
         public ActionResult<CategoriaEntities> GetByID(int id)
         {
@@ -107,14 +89,14 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, [FromQuery] int estado = 0)
         {
             try
             {
-                var lolo = _ICategoriaservice.GetById(id);
-                if (lolo == null) return NotFound();
-                _ICategoriaservice.Delete(id);
-                return Ok(new { mensaje = "Borrado correctamente" });
+                var categoria = _ICategoriaservice.GetById(id);
+                if (categoria == null) return NotFound();
+                _ICategoriaservice.Delete(id, estado);
+                return Ok(new { mensaje = estado == 0 ? "Categoría desactivada correctamente" : "Categoría activada correctamente" });
             }
             catch (Exception ex)
             {

@@ -61,19 +61,6 @@ public class CategoriaService : ICategoriaService
         }
         return categoria;
     }
-    
-    public bool ActivarCategoria(int id)
-    {
-        using (var connection = new SqlConnection(connectionString))
-        {
-            connection.Open();
-            var command = new SqlCommand("UPDATE Categorias SET Estado = 1 WHERE IdCategoria = @id", connection);
-            command.Parameters.AddWithValue("@id", id);
-            int rowsAffected = command.ExecuteNonQuery();
-            return rowsAffected > 0;
-        }
-    }
-
     public CategoriaEntities GetById(int id)
     {
         using (var connection = new SqlConnection(connectionString))
@@ -117,13 +104,14 @@ public class CategoriaService : ICategoriaService
         }
     }
 
-    public void Delete(int id)
+    public void Delete(int id, int estado)
     {
         using (var connection = new SqlConnection(connectionString))
         {
             var command = new SqlCommand("Sp_EliminarCategoria", connection);
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@Estado", estado);
 
             connection.Open();
             command.ExecuteNonQuery();
