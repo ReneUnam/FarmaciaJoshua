@@ -17,25 +17,24 @@ namespace WebApi.Controllers
             _IRolService = rolService;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<RolesEntities>> GetAll()
+        [HttpGet ("estado/{estado}")]
+        public ActionResult<IEnumerable<RolesEntities>> GetByEstado(int estado)
         {
             try
             {
-                var rol = _IRolService.GetAll();
-                if (rol == null)
+                var rol = _IRolService.GetByEstado(estado);
+                if (rol == null || !rol.Any())
                 {
                     return NotFound(new { mensaje = "No hay un rol que mostrar" });
                 }
                 return Ok(rol);
-
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
             }
-
         }
+
 
         [HttpGet("{id}")]
         public ActionResult<RolesEntities> GetByID(int id)
@@ -88,14 +87,14 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, [FromQuery] int estado = 0)
         {
             try
             {
                 var find = _IRolService.GetById(id);
                 if (find == null) return NotFound();
-                _IRolService.Delete(id);
-                return Ok(new { mensaje = "Borrado correctamente" });
+                _IRolService.Delete(id, estado);
+                return Ok(new { mensaje = estado == 0 ? "Rol desactivado correctamente" : "Rol activado correctamente" });
             }
             catch (Exception ex)
             {

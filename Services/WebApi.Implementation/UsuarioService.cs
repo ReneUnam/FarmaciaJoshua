@@ -38,7 +38,7 @@ public class UsuarioService : IUsuarioService
         return usuario;
     }*/
 
-    public IEnumerable<UsuarioEntities> GetAll()
+    public IEnumerable<UsuarioEntities> GetByEstado(int estado)
     {
         var usuarios = new List<UsuarioEntities>();
 
@@ -47,6 +47,8 @@ public class UsuarioService : IUsuarioService
             connection.Open();
             var cmd = new SqlCommand("Sp_MostrarUsuarios", connection);
             cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@estado", estado);
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -104,24 +106,34 @@ public class UsuarioService : IUsuarioService
             var cmd = new SqlCommand("Sp_EditarUsuario", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
 
+            byte[] salt = null;
+            string hashedPassword = null;
+
+            if(!string.IsNullOrEmpty(usuario.Contraseña))
+            {
+                hashedPassword = CreatePasswordHash(usuario.Contraseña, out salt);
+            }
+
             cmd.Parameters.AddWithValue("@id", usuario.IdUsuario == 0 ? (object)DBNull.Value : usuario.IdUsuario);
             cmd.Parameters.AddWithValue("@nombres", string.IsNullOrEmpty(usuario.Nombres) ? (object)DBNull.Value : usuario.Nombres);
             cmd.Parameters.AddWithValue("@apellidos", string.IsNullOrEmpty(usuario.Apellidos) ? (object)DBNull.Value : usuario.Apellidos);
             cmd.Parameters.AddWithValue("@nombreDeUsuario", string.IsNullOrEmpty(usuario.NombreUsuario) ? (object)DBNull.Value : usuario.NombreUsuario);
-            cmd.Parameters.AddWithValue("@pwd", string.IsNullOrEmpty(usuario.Contraseña) ? (object)DBNull.Value : usuario.Contraseña);
+            cmd.Parameters.AddWithValue("@pwd", string.IsNullOrEmpty(hashedPassword) ? (object)DBNull.Value : hashedPassword);
+            cmd.Parameters.AddWithValue("@salt", salt == null ? (object)DBNull.Value : salt);
             cmd.Parameters.AddWithValue("@idrol", usuario.IdRol == 0 ? (object)DBNull.Value : usuario.IdRol);
 
             cmd.ExecuteNonQuery();
         }
     }
 
-    public void Delete(int id)
+    public void Delete(int id, int estado)
     {
         using (var connection = new SqlConnection(connectionString))
         {
             var command = new SqlCommand("Sp_EliminarUsuario", connection);
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@estado", estado);
 
             connection.Open();
             command.ExecuteNonQuery();

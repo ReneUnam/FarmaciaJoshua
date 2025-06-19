@@ -36,25 +36,24 @@ namespace WebApi.Api.Controllers
         }
 
         
-        [HttpGet]
-        public ActionResult<IEnumerable<ProveedoresEntities>> GetAll()
+        [HttpGet("estado/{estado}")]
+        public ActionResult<IEnumerable<ProveedoresEntities>> GetByEstado(int estado)
         {
             try
             {
-                var proveedores = _IProveedoresservice.GetAll();
-                if (proveedores == null)
+                var proveedores = _IProveedoresservice.GetByEstado(estado);
+                if (proveedores == null || !proveedores.Any())
                 {
-                    return NotFound(new { mensaje = "No hay Proveedores que mostrar" });
+                    return NotFound(new { mensaje = "No hay proveedores con el estado especificado" });
                 }
                 return Ok(proveedores);
-
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
             }
-
         }
+
 
         [HttpGet("{id}")]
         public ActionResult<ProveedoresEntities> GetByID(int id)
@@ -91,14 +90,14 @@ namespace WebApi.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, [FromQuery] int estado = 0)
         {
             try
             {
-                var lolo = _IProveedoresservice.GetById(id);
-                if (lolo == null) return NotFound();
-                _IProveedoresservice.Delete(id);
-                return Ok(new { mensaje = "Borrado correctamente" });
+                var proveedores = _IProveedoresservice.GetById(id);
+                if (proveedores == null) return NotFound();
+                _IProveedoresservice.Delete(id, estado);
+                return Ok(new { mensaje = estado == 0 ? "Proveedor desactivado correctamente" : "Proveedor activado correctamente" });
             }
             catch (Exception ex)
             {

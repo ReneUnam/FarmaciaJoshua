@@ -10,9 +10,9 @@ namespace WebApi.Interface
     public interface IClientesService
     {
         public ClientesEntities Add(ClientesEntities clientes);
-        public IEnumerable<ClientesEntities> GetAll();
+        public IEnumerable<ClientesEntities> GetByEstado(int estado);
         public ClientesEntities GetById(int id);
         public void Update(ClientesEntities clientes);
-        public void Delete(int id);
+        public void Delete(int id, int estado);
     }
 }

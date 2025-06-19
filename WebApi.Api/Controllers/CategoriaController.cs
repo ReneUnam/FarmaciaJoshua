@@ -34,13 +34,13 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<CategoriaEntities>> GetAll()
+        [HttpGet("estado/{estado}")]
+        public ActionResult<IEnumerable<CategoriaEntities>> GetByEstado(int estado)
         {
             try
             {
-                var categoria = _ICategoriaservice.GetAll();
-                if (categoria == null)
+                var categoria = _ICategoriaservice.GetByEstado(estado);
+                if (categoria == null || !categoria.Any())
                 {
                     return NotFound(new { mensaje = "No hay categorias que mostrar" });
                 }
@@ -89,14 +89,14 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, [FromQuery] int estado = 0)
         {
             try
             {
-                var lolo = _ICategoriaservice.GetById(id);
-                if (lolo == null) return NotFound();
-                _ICategoriaservice.Delete(id);
-                return Ok(new { mensaje = "Borrado correctamente" });
+                var categoria = _ICategoriaservice.GetById(id);
+                if (categoria == null) return NotFound();
+                _ICategoriaservice.Delete(id, estado);
+                return Ok(new { mensaje = estado == 0 ? "Categoría desactivada correctamente" : "Categoría activada correctamente" });
             }
             catch (Exception ex)
             {

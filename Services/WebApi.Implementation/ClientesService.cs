@@ -39,20 +39,21 @@ namespace WebApi.Implementation
             return clientes;
         }
 
-        public void Delete(int id)
+        public void Delete(int id, int estado)
         {
             using (var connection = new SqlConnection(connectionString))
             {
                 var command = new SqlCommand("Ventas.Sp_ElimnarClientes", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@estado", estado);
 
                 connection.Open();
                 command.ExecuteNonQuery();
             }
         }
 
-        public IEnumerable<ClientesEntities> GetAll()
+        public IEnumerable<ClientesEntities> GetByEstado(int estado)
         {
             var clientes = new List<ClientesEntities>();
 
@@ -61,6 +62,8 @@ namespace WebApi.Implementation
                 connection.Open();
                 var cmd = new SqlCommand("Ventas.Sp_MostrarCliente", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@estado", estado);
 
                 using (var reader = cmd.ExecuteReader())
                 {

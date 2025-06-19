@@ -6,7 +6,7 @@ using WebApi.Model;
 
 namespace WebApi.Controllers
 {
-    [Authorize(Roles = "1")]
+    //[Authorize(Roles = "1")]
     [Route("api/[controller]")]
     [ApiController]
     public class CompraController : ControllerBase
