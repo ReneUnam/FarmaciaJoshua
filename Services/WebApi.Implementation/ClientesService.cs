@@ -39,13 +39,14 @@ namespace WebApi.Implementation
             return clientes;
         }
 
-        public void Delete(int id)
+        public void Delete(int id, int estado)
         {
             using (var connection = new SqlConnection(connectionString))
             {
                 var command = new SqlCommand("Ventas.Sp_ElimnarClientes", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@estado", estado);
 
                 connection.Open();
                 command.ExecuteNonQuery();
