@@ -15,7 +15,7 @@ namespace WebApi.Controllers
         {
             _IVentaService = ventaService;
         }
-        
+
         [HttpGet("proximo-numero")]
         public IActionResult ObtenerProximoNumeroFactura()
         {
@@ -50,12 +50,19 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult Add([FromBody] Venta venta)
         {
-            if (venta == null)
+            try
             {
-                return BadRequest("Datos no encontrados");
+                if (venta == null)
+                {
+                    return BadRequest("Datos no encontrados");
+                }
+                _IVentaService.Add(venta);
+                return Ok();
             }
-            _IVentaService.Add(venta);
-            return Ok();
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message }); 
+            }
         }
 
         [HttpPut("{id}")]

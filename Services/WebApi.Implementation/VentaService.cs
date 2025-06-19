@@ -20,40 +20,50 @@ public class VentaService : IVentaService
             connection.Open();
             try
             {
-                var command = new SqlCommand("Ventas.Sp_AgregarVenta", connection);
+                var command = new SqlCommand("Ventas.Sp_AgregarVentaConStock", connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@Idcliente", venta.IdCliente);
+
+                command.Parameters.AddWithValue("@idcliente", venta.IdCliente);
                 command.Parameters.AddWithValue("@idusuario", venta.IdUsuario);
-                command.Parameters.AddWithValue("@fecha", venta.FechaVenta);
+                command.Parameters.AddWithValue("@fecha", venta.FechaVenta ?? DateTime.Now);
+                command.Parameters.AddWithValue("@descuento", venta.Descuento);
+                command.Parameters.AddWithValue("@subtotal", venta.Subtotal);
+                command.Parameters.AddWithValue("@total", venta.Total);
 
                 DataTable detalleTable = new DataTable();
-                detalleTable.Columns.Add("Id", typeof(int));
-                detalleTable.Columns.Add("Cantidad", typeof(int));
-                detalleTable.Columns.Add("Precio", typeof(decimal));
+                detalleTable.Columns.Add("idproducto", typeof(int));
+                detalleTable.Columns.Add("cantidad", typeof(int));
+                detalleTable.Columns.Add("precio", typeof(decimal));
+                detalleTable.Columns.Add("descuento", typeof(decimal));
+                detalleTable.Columns.Add("subtotal", typeof(decimal));
+                detalleTable.Columns.Add("total", typeof(decimal));
 
                 foreach (var detalle in venta.VentaDetalle)
                 {
-                    detalleTable.Rows.Add(detalle.IdProductoAlmacenado, detalle.Cantidad, detalle.PrecioUnitario);
+                    detalleTable.Rows.Add(detalle.IdProductoAlmacenado, detalle.Cantidad, detalle.PrecioUnitario, detalle.Descuento, detalle.Subtotal, detalle.Total);
                 }
-                SqlParameter detalleParameter = new SqlParameter("@Detalles", SqlDbType.Structured)
+
+                SqlParameter detalleParameter = new SqlParameter("@detalles", SqlDbType.Structured)
                 {
                     TypeName = "Ventas.TDetalleVenta",
                     Value = detalleTable
                 };
-
                 command.Parameters.Add(detalleParameter);
 
                 command.ExecuteNonQuery();
-
                 return venta;
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
-                return null;
+                if (ex.Message.Contains("Stock insuficiente"))
+                {
+                    throw new Exception("Stock insuficiente para uno o más productos.");
+                }
+                throw;
             }
         }
     }
+
 
     public string ObtenerProximoNumeroFactura()
     {
