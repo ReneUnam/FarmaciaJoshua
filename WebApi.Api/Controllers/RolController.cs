@@ -87,14 +87,14 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, [FromQuery] int estado = 0)
         {
             try
             {
                 var find = _IRolService.GetById(id);
                 if (find == null) return NotFound();
-                _IRolService.Delete(id);
-                return Ok(new { mensaje = "Borrado correctamente" });
+                _IRolService.Delete(id, estado);
+                return Ok(new { mensaje = estado == 0 ? "Rol desactivado correctamente" : "Rol activado correctamente" });
             }
             catch (Exception ex)
             {
