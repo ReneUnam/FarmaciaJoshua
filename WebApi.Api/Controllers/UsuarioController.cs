@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.Interface;
 using WebApi.Model;
 using WebApi.Api.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UsuarioController : ControllerBase
     {
@@ -51,7 +53,7 @@ namespace WebApi.Controllers
             }
 
         }
-
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<IActionResult> add([FromBody] UsuarioDto usuario)
         {

@@ -33,6 +33,7 @@ namespace WebApi.Api.Controllers
                 apellidos = user.Apellidos,
                 nombreUsuario = user.NombreUsuario,
                 idRol = user.IdRol,
+                rol = user.Rol
             });
 
         }

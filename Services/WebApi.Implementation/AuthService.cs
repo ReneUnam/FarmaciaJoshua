@@ -32,7 +32,7 @@ namespace WebApi.Implementation
 
             using (var connection = new SqlConnection(connectionString))
             {
-               var command = new SqlCommand("select * from Usuarios where NombreUsuario = @NombreUsuario", connection);
+               var command = new SqlCommand("SELECT \r\n  Usuarios.IdUsuario, Usuarios.Nombres, Usuarios.Apellidos, Usuarios.NombreUsuario, Usuarios.Contraseña, Usuarios.UsuarioSalt, Usuarios.IdRol, \r\n  Roles.Nombre\r\nFROM \r\n  Usuarios \r\nJOIN \r\n  Roles ON Usuarios.IdRol = Roles.IdRol\r\nWHERE \r\n    Usuarios.NombreUsuario = @NombreUsuario;", connection);
                 command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
 
                 await connection.OpenAsync();
@@ -52,6 +52,7 @@ namespace WebApi.Implementation
                                 NombreUsuario = reader["NombreUsuario"].ToString(),
                                 Contraseña = passwordHash,
                                 IdRol = (int) reader["IdRol"],
+                                Rol = reader["Nombre"].ToString()
                             };
                         }
                     }
@@ -65,7 +66,7 @@ namespace WebApi.Implementation
         public string GenerateJwtToken(UsuarioEntities usuario)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -73,7 +74,8 @@ namespace WebApi.Implementation
                 {
                     new Claim(ClaimTypes.Name, usuario.IdUsuario.ToString()),
                     new Claim(ClaimTypes.Role, usuario.IdRol.ToString()),
-                    new Claim(ClaimTypes.Name, usuario.NombreUsuario)
+                    new Claim(ClaimTypes.Name, usuario.NombreUsuario),
+                    new Claim(ClaimTypes.Role, usuario.Rol)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(
