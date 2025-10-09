@@ -22,7 +22,7 @@ namespace WebApi.Implementation
         public AuthService(IConfiguration configuration)
         {
             _configuration = configuration;
-            connectionString = _configuration.GetConnectionString("connectionSQL");
+            connectionString = _configuration.GetConnectionString("ConnectionSQL");
         }
 
         public async Task<UsuarioEntities> Autenticar(string nombreUsuario, string Contraseña)

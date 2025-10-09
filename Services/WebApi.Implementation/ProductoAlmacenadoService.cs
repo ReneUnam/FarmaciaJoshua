@@ -19,7 +19,7 @@ namespace WebApi.Implementation
         public ProductoAlmacenadoService(IConfiguration configuration)
         {
             _configuration = configuration;
-            connectionString = _configuration.GetConnectionString("connectionSQL");
+            connectionString = _configuration.GetConnectionString("ConnectionSQL");
         }
 
         public ProductoAlmacenadoEntities Add(ProductoAlmacenadoEntities Tbl_ProductoAlmacenado)

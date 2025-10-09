@@ -16,7 +16,7 @@ public class UsuarioService : IUsuarioService
     public UsuarioService(IConfiguration configuration)
     {
         _configuration = configuration;
-        connectionString = _configuration.GetConnectionString("connectionSQL");
+        connectionString = _configuration.GetConnectionString("ConnectionSQL");
     }
 
     /*public async Task<UsuarioEntities> Add(UsuarioEntities usuario)

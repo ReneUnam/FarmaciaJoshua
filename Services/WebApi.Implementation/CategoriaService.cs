@@ -14,7 +14,7 @@ public class CategoriaService : ICategoriaService
     public CategoriaService(IConfiguration configuration)
     {
         _configuration = configuration;
-        connectionString = _configuration.GetConnectionString("connectionSQL");
+        connectionString = _configuration.GetConnectionString("ConnectionSQL");
     }
 
     public CategoriaEntities Add(CategoriaEntities categoria)

@@ -19,7 +19,7 @@ namespace WebApi.Implementation
         public ClientesService(IConfiguration configuration)
         {
             _configuration = configuration;
-            connectionString = _configuration.GetConnectionString("connectionSQL");
+            connectionString = _configuration.GetConnectionString("ConnectionSQL");
         }
 
         public ClientesEntities Add(ClientesEntities clientes)

@@ -20,7 +20,7 @@ namespace WebApi.Implementation
         public Cat_DetalleProductoService(IConfiguration configuration)
         {
             _configuration = configuration;
-            connectionString = _configuration.GetConnectionString("connectionSQL");
+            connectionString = _configuration.GetConnectionString("ConnectionSQL");
         }
 
         public Cat_DetalleProductoEntities Add(Cat_DetalleProductoEntities cat_detalleproducto)

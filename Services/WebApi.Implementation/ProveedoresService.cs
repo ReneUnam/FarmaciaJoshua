@@ -19,7 +19,7 @@ namespace WebApi.Implementation
         public ProveedoresService(IConfiguration configuration)
         {
             _configuration = configuration;
-            connectionString = _configuration.GetConnectionString("connectionSQL");
+            connectionString = _configuration.GetConnectionString("ConnectionSQL");
         }
 
         public ProveedoresEntities Add(ProveedoresEntities proveedores)

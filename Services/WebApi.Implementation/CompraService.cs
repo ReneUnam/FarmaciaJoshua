@@ -11,7 +11,7 @@ public class CompraService : ICompraService
     public CompraService(IConfiguration configuration)
     {
         _configuration = configuration;
-        connectionString = _configuration.GetConnectionString("connectionSQL");
+        connectionString = _configuration.GetConnectionString("ConnectionSQL");
     }
     public Compra Add(Compra compra)
     {

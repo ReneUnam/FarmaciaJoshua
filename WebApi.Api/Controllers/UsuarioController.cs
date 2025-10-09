@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     [ApiController]
     public class UsuarioController : ControllerBase
     {
@@ -53,7 +53,7 @@ namespace WebApi.Controllers
             }
 
         }
-        [Authorize(Roles = "Administrador")]
+        // [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<IActionResult> add([FromBody] UsuarioDto usuario)
         {

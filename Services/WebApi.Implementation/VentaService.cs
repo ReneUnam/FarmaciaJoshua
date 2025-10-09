@@ -11,7 +11,7 @@ public class VentaService : IVentaService
     public VentaService(IConfiguration configuration)
     {
         _configuration = configuration;
-        connectionString = _configuration.GetConnectionString("connectionSQL");
+        connectionString = _configuration.GetConnectionString("ConnectionSQL");
     }
     public Venta Add(Venta venta)
     {
