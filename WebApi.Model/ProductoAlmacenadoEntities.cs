@@ -16,6 +16,9 @@ namespace WebApi.Model;
         public decimal Almc_PrecioCompra { get; set; }
         public decimal Almc_PrecioVenta { get; set; }
         public bool? Almc_Estado { get; set; }
+        public string Detalle_Descripcion { get; set; }
+        public DateTime Detalle_FechaVencimiento { get; set; }
+        public string NombreProducto { get; set; }
     }
 
 

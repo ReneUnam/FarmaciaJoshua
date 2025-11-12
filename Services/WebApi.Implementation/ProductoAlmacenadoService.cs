@@ -82,6 +82,10 @@ namespace WebApi.Implementation
                             Almc_PrecioVenta = Convert.ToDecimal(reader["Almc_PrecioVenta"]),
                             Almc_Estado = Convert.ToBoolean(reader["Almc_Estado"].ToString()),
 
+                            Detalle_Descripcion = reader["Detalle_Descripcion"].ToString(),
+                            Detalle_FechaVencimiento = Convert.ToDateTime(reader["Detalle_FechaVencimiento"]),
+                            NombreProducto = reader["NombreProducto"].ToString()
+
                         });
                     }
                 }

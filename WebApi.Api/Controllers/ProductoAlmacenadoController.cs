@@ -20,6 +20,8 @@ namespace WebApi.Api.Controllers
             _IProductoAlmacenadoService = productoAlmacenadoService;
         }
 
+        
+
         [HttpPost]
         public ActionResult Add(ProductoAlmacenadoEntities productoalmacenado)
         {
@@ -34,8 +36,7 @@ namespace WebApi.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message });
             }
         }
-
-        
+    
         [HttpGet]
         public ActionResult<IEnumerable<ProductoAlmacenadoEntities>> GetAll()
         {
