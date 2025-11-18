@@ -5,12 +5,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<LoggingFilter>();
+});
+
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IRolService, RolService>();
@@ -22,6 +27,7 @@ builder.Services.AddScoped<ICat_ProductoService, Cat_ProductoService>();
 builder.Services.AddScoped<ICat_DetalleProductoService, Cat_DetalleProductoService>();
 builder.Services.AddScoped<IProductoAlmacenadoService, ProductoAlmacenadoService>();
 builder.Services.AddScoped<ICompraService, CompraService>();
+builder.Services.AddSingleton<IMetricService, MetricService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -96,6 +102,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+app.UseMiddleware<MetricsMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.Run();
