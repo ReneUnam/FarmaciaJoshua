@@ -24,6 +24,7 @@ builder.Services.AddScoped<IProductoAlmacenadoService, ProductoAlmacenadoService
 builder.Services.AddScoped<ICompraService, CompraService>();
 builder.Services.AddSingleton<IMetricService, MetricService>();
 builder.Services.AddScoped<LoggingFilter>();
+builder.Services.AddSingleton<IAuditService, AuditService>();
 
 builder.Services.AddControllers(options =>
 {

@@ -32,11 +32,11 @@ namespace WebApi.Implementation
 
             using (var connection = new SqlConnection(connectionString))
             {
-               var command = new SqlCommand("SELECT \r\n  Usuarios.IdUsuario, Usuarios.Nombres, Usuarios.Apellidos, Usuarios.NombreUsuario, Usuarios.Contraseña, Usuarios.UsuarioSalt, Usuarios.IdRol, \r\n  Roles.Nombre\r\nFROM \r\n  Usuarios \r\nJOIN \r\n  Roles ON Usuarios.IdRol = Roles.IdRol\r\nWHERE \r\n    Usuarios.NombreUsuario = @NombreUsuario;", connection);
+                var command = new SqlCommand("SELECT \r\n  Usuarios.IdUsuario, Usuarios.Nombres, Usuarios.Apellidos, Usuarios.NombreUsuario, Usuarios.Contraseña, Usuarios.UsuarioSalt, Usuarios.IdRol, \r\n  Roles.Nombre\r\nFROM \r\n  Usuarios \r\nJOIN \r\n  Roles ON Usuarios.IdRol = Roles.IdRol\r\nWHERE \r\n    Usuarios.NombreUsuario = @NombreUsuario;", connection);
                 command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
 
                 await connection.OpenAsync();
-                using (var reader = await command.ExecuteReaderAsync()) 
+                using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (reader.Read())
                     {
@@ -46,12 +46,12 @@ namespace WebApi.Implementation
                         {
                             usuario = new UsuarioEntities
                             {
-                                IdUsuario = (int) reader["IdUsuario"],
+                                IdUsuario = (int)reader["IdUsuario"],
                                 Nombres = reader["Nombres"].ToString(),
                                 Apellidos = reader["Apellidos"].ToString(),
                                 NombreUsuario = reader["NombreUsuario"].ToString(),
                                 Contraseña = passwordHash,
-                                IdRol = (int) reader["IdRol"],
+                                IdRol = (int)reader["IdRol"],
                                 Rol = reader["Nombre"].ToString()
                             };
                         }
@@ -70,17 +70,17 @@ namespace WebApi.Implementation
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, usuario.IdUsuario.ToString()),
-                    new Claim(ClaimTypes.Role, usuario.IdRol.ToString()),
-                    new Claim(ClaimTypes.Name, usuario.NombreUsuario),
-                    new Claim(ClaimTypes.Role, usuario.Rol)
-                }),
+            new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()), // id
+            new Claim(ClaimTypes.Name, usuario.NombreUsuario ?? string.Empty),   // nombre de usuario
+            new Claim(ClaimTypes.Role, usuario.Rol ?? string.Empty),
+            new Claim("role_id", usuario.IdRol.ToString())
+        }),
                 Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
                 )
             };
 
