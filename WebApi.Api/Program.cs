@@ -9,12 +9,7 @@ using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<LoggingFilter>();
-});
+//builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
@@ -28,6 +23,13 @@ builder.Services.AddScoped<ICat_DetalleProductoService, Cat_DetalleProductoServi
 builder.Services.AddScoped<IProductoAlmacenadoService, ProductoAlmacenadoService>();
 builder.Services.AddScoped<ICompraService, CompraService>();
 builder.Services.AddSingleton<IMetricService, MetricService>();
+builder.Services.AddScoped<LoggingFilter>();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<LoggingFilter>();
+});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -98,11 +100,8 @@ app.UseRouting();
 app.UseCors("Corspolicy");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
 app.UseMiddleware<MetricsMiddleware>();
+app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.Run();

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Model;
-using Newtonsoft.Json;
-
+using System.Text.Json;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,64 +13,88 @@ public class MetricsController : ControllerBase
         _metricService = metricService;
     }
 
-    // ====== 1) GUARDAR LOG INDIVIDUAL ======
     [HttpPost("log")]
-    public async Task<IActionResult> SaveLog([FromBody] LogEntry log)
+    public async Task<IActionResult> SaveLog([FromBody] JsonElement body)
     {
-        if (log == null)
-            return BadRequest("LogEntry no puede ser null.");
+        if (body.ValueKind != JsonValueKind.Object) return BadRequest("Body inválido.");
+
+        // Aceptar wrapper opcional {"log": {...}}
+        var payload = body;
+        if (body.TryGetProperty("log", out var logProp))
+            payload = logProp;
+
+        LogEntry? log;
+        try { log = JsonSerializer.Deserialize<LogEntry>(payload.GetRawText()); }
+        catch { return BadRequest("Estructura inválida."); }
+
+        if (log == null) return BadRequest("Log inválido.");
+
+        // Forzar valores seguros
+        log.Id = null;
+        if (log.Timestamp == default) log.Timestamp = DateTime.Now;
 
         await _metricService.SaveLog(log);
         return Ok(new { message = "Log guardado correctamente" });
     }
 
-    // ====== 2) GUARDAR METRIC INDIVIDUAL ======
     [HttpPost("metric")]
     public async Task<IActionResult> SaveMetric([FromBody] Metric metric)
     {
-        if (metric == null)
-            return BadRequest("Metric no puede ser null.");
+        if (metric == null) return BadRequest("Metric no puede ser null.");
+        metric.Id = null;
+        if (metric.Timestamp == default) metric.Timestamp = DateTime.Now;
+        metric.Tags ??= new Dictionary<string, string>();
 
         await _metricService.SaveMetric(metric);
         return Ok(new { message = "Métrica guardada correctamente" });
     }
 
-    // ====== 3) GUARDAR LOTE (LOGS + MÉTRICAS) ======
     [HttpPost("batch")]
-    public async Task<IActionResult> SaveBatch([FromBody] List<object> items)
+    public async Task<IActionResult> SaveBatch([FromBody] JsonElement body)
     {
-        if (items == null || items.Count == 0)
-            return BadRequest("La lista está vacía.");
+        if (body.ValueKind != JsonValueKind.Array)
+            return BadRequest("El body debe ser un array JSON.");
 
-        int logsGuardados = 0;
-        int metricsGuardadas = 0;
+        int logsGuardados = 0, metricsGuardadas = 0, errores = 0;
 
-        foreach (var item in items)
+        foreach (var item in body.EnumerateArray())
         {
-            var json = item as Newtonsoft.Json.Linq.JObject;
-            if (json == null) continue;
-
-            var type = json["type"]?.ToString()?.Trim()?.ToLower();
-
-            if (type == "log")
+            try
             {
-                var log = json.ToObject<LogEntry>();
-                await _metricService.SaveLog(log);
-                logsGuardados++;
+                if (item.ValueKind != JsonValueKind.Object) { errores++; continue; }
+
+                var type = item.TryGetProperty("type", out var t) ? t.GetString()?.Trim().ToLower() : null;
+
+                if (type == "log")
+                {
+                    var log = JsonSerializer.Deserialize<LogEntry>(item.GetRawText());
+                    if (log == null) { errores++; continue; }
+                    log.Id = null;
+                    if (log.Timestamp == default) log.Timestamp = DateTime.Now;
+                    await _metricService.SaveLog(log);
+                    logsGuardados++;
+                }
+                else if (type == "metric")
+                {
+                    var metric = JsonSerializer.Deserialize<Metric>(item.GetRawText());
+                    if (metric == null) { errores++; continue; }
+                    metric.Id = null;
+                    if (metric.Timestamp == default) metric.Timestamp = DateTime.Now;
+                    metric.Tags ??= new Dictionary<string, string>();
+                    await _metricService.SaveMetric(metric);
+                    metricsGuardadas++;
+                }
+                else
+                {
+                    errores++;
+                }
             }
-            else if (type == "metric")
+            catch
             {
-                var metric = json.ToObject<Metric>();
-                await _metricService.SaveMetric(metric);
-                metricsGuardadas++;
+                errores++;
             }
         }
 
-        return Ok(new
-        {
-            logs = logsGuardados,
-            metrics = metricsGuardadas,
-            total = logsGuardados + metricsGuardadas
-        });
+        return Ok(new { logs = logsGuardados, metrics = metricsGuardadas, errores, total = logsGuardados + metricsGuardadas });
     }
 }
